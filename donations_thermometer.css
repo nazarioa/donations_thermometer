@@ -1,0 +1,20 @@
+.donations_thermometer .gauge{
+	width: 77px;
+	height: 442px;
+	position:relative;
+	background: #333 url(gauge.gif) top left no-repeat;
+}
+
+.donations_thermometer .gauge .current-value {
+	position:absolute;
+	left: 0px;
+	bottom: 0px;
+	height: 50%;
+	text-align:center;
+	width: 100%;
+	background: red url(gauge.gif) bottom right no-repeat;
+}
+
+.donations_thermometer .gauge .current-value p {
+	display:none;
+}
