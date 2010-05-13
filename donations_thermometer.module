@@ -55,12 +55,14 @@ function donations_thermometer_block($op='list', $delta=0) {
     $target = variable_get('donations_thermometer_target', 100);
     $percent = ($amount/$target)*100;
     $currency = variable_get('donations_thermometer_currency', '$');
+    $size = variable_get('donations_thermometer_size', 'large');
+
     $block['subject'] = 'Donations Thermometer';
     $block['content'] = '
-    <style>.gauge .current-value {height:'. $percent .'%;}
+    <style>.gauge-' . $size . ' .current-value {height:'. $percent .'%;}
 </style>
     <div class="donations_thermometer">
-    <div class="gauge">
+    <div class="gauge-' . $size . '">
     <div class="current-value" id="campaign-progress-current">
     <p>'. $percent .'% </p>
     </div>
@@ -77,8 +79,8 @@ function donations_thermometer_admin() {
     '#type' => 'textfield',
     '#title' => t('Target'),
     '#default_value' => variable_get('donations_thermometer_target', 100),
-    '#size' => 4,
-    '#maxlength' => 4,
+    '#size' => 9,
+    '#maxlength' => 10,
     '#description' => t("The target."),
     '#required' => TRUE,
   );
@@ -86,8 +88,8 @@ function donations_thermometer_admin() {
     '#type' => 'textfield',
     '#title' => t('Current Amount'),
     '#default_value' => variable_get('donations_thermometer_amount', 50),
-    '#size' => 4,
-    '#maxlength' => 4,
+    '#size' => 9,
+    '#maxlength' => 10,
     '#description' => t("The amount."),
     '#required' => TRUE,
   );
@@ -103,6 +105,16 @@ function donations_thermometer_admin() {
     '' => t('None'),
     ),
     '#description' => t("Choose a currency(if applicable) to be used with your amounts")
+  );
+ $form['donations_thermometer_size'] = array(
+    '#type' => 'select',
+    '#title' => t('Size'),
+    '#default_value' => variable_get('donations_thermometer_size', 'Large'),
+    '#options' => array(
+    'Large' => 'Large', 
+    'Small' => 'Small',
+    ),
+    '#description' => t("Choose what size to display the thermometer.")
   );
   
   
