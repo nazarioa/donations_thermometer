@@ -1,5 +1,0 @@
-name = Donations Thermometer
-description = "Allows creation of a thermometer block to visually show amount of donations etc"
-package = Other
-version = "6.x-1.x"
-core = "6.x"
