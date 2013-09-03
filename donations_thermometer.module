@@ -13,13 +13,13 @@ function donations_thermometer_menu() {
   $items = array();
 
   $items['admin/config/media/donations_thermometer'] = array(
-      'title' => t('Donations Thermometer Settings'),
-      'description' => t('Edit the settings of the thermometer block'),
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('donations_thermometer_admin'),
-      'access arguments' => array('administer donations thermometer'),
-      'type' => MENU_NORMAL_ITEM,
-      'file' => 'includes/admin.inc',
+    'title' => t('Donations Thermometer Settings'),
+    'description' => t('Edit the settings of the thermometer block'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('donations_thermometer_admin'),
+    'access arguments' => array('administer donations thermometer'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'includes/admin.inc',
   );
 
   return $items;
@@ -30,8 +30,8 @@ function donations_thermometer_menu() {
  */
 function donations_thermometer_permission() {
   return array('administer donations thermometer' => array(
-          'title' => t('Adminster Donations Thermometer'),
-      ),
+      'title' => t('Adminster Donations Thermometer'),
+    ),
   );
 }
 
@@ -42,9 +42,9 @@ function donations_thermometer_theme($existing, $type, $theme, $path) {
   $items = array();
 
   $items['donations_thermometer'] = array(
-      'arguments' => array('amount' => NULL, 'target' => NULL, 'currency' => NULL, 'size' => 'large'),
-      'file' => 'includes/theme.inc',
-      'template' => 'templates/donations-thermometer',
+    'arguments' => array('amount' => NULL, 'target' => NULL, 'currency' => NULL, 'size' => 'large'),
+    'file' => 'includes/theme.inc',
+    'template' => 'templates/donations-thermometer',
   );
 
   return $items;
@@ -56,7 +56,7 @@ function donations_thermometer_theme($existing, $type, $theme, $path) {
 function donations_thermometer_block_info() {
   $blocks = array();
   $blocks['thermometer'] = array(
-      'info' => t("Donations Thermometer"),
+    'info' => t("Donations Thermometer"),
   );
   return $blocks;
 }
