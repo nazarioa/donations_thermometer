@@ -89,6 +89,6 @@ function donations_thermometer_init() {
   // in the theme function is incompatible with the block cache.
   // See http://drupal.org/node/214856.
   $module_path = drupal_get_path('module', 'donations_thermometer');
-  drupal_add_js($module_path .'/donations_thermometer.js');
-  drupal_add_css($module_path .'/donations_thermometer.css');
+  drupal_add_js($module_path .'/js/donations_thermometer.js');
+  drupal_add_css($module_path .'/css/donations_thermometer.css');
 }
