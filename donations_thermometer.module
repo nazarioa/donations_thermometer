@@ -73,7 +73,7 @@ function donations_thermometer_block_view($delta) {
     $currency = variable_get('donations_thermometer_currency', '$');
     $size = variable_get('donations_thermometer_size', 'large');
 
-    $block['subject'] = 'Donations Thermometer';
+    $block['subject'] = t('Donations Thermometer');
 
     $block['content'] = theme('donations_thermometer', array('amount' => $amount, 'target' => $target, 'currency' => $currency, 'size' => $size));
   }
