@@ -4,10 +4,10 @@
     </div>
   </div>
   <p>
-    <span class="donations_thermometer-label"><?php print t('Current Amount:'); ?></span>
-    <span class="donations_thermometer-amount"><?php print $currency; ?><?php print $amount; ?></span>
+    <span class="donations_thermometer-label"><?php print t('Current:'); ?></span>
+    <span class="donations_thermometer-amount"><?php print $prefix; ?><?php print $current; ?><?php print $postfix; ?></span>
   </p>
   <p>
     <span class="donations_thermometer-label"><?php print t('Target:'); ?></span>
-    <span class="donations_thermometer-amount"><?php print $currency; ?><?php print $target; ?></span>
+    <span class="donations_thermometer-amount"><?php print $prefix; ?><?php print $target; ?><?php print $postfix; ?></span>
   </p>

@@ -22,7 +22,7 @@ function donations_thermometer_theme($existing, $type, $theme, $path) {
   $items = array();
 
   $items['donations_thermometer'] = array(
-    'arguments' => array('amount' => NULL, 'target' => NULL, 'currency' => NULL, 'size' => 'large'),
+    'arguments' => array('current' => NULL, 'target' => NULL, 'prefix' => NULL, 'postfix' => NULL, 'size' => 'large'),
     'file' => 'includes/theme.inc',
     'template' => 'templates/donations-thermometer',
   );
@@ -48,14 +48,15 @@ function donations_thermometer_block_view($delta) {
   $block = array();
 
   if ($delta == 'thermometer') {
-    $amount = variable_get('donations_thermometer_amount', 50);
+    $current = variable_get('donations_thermometer_current', 50);
     $target = variable_get('donations_thermometer_target', 100);
-    $currency = variable_get('donations_thermometer_currency', '$');
+    $prefix = variable_get('donations_thermometer_prefix', '$');
+    $postfix = variable_get('donations_thermometer_postfix', '');
     $size = variable_get('donations_thermometer_size', 'large');
 
     $block['subject'] = t('Donations Thermometer');
 
-    $block['content'] = theme('donations_thermometer', array('amount' => $amount, 'target' => $target, 'currency' => $currency, 'size' => $size));
+    $block['content'] = theme('donations_thermometer', array('current' => $current, 'target' => $target, 'prefix' => $prefix, 'postfix' => $postfix, 'size' => $size));
   }
 
   return $block;
@@ -76,27 +77,32 @@ function donations_thermometer_block_configure($delta = '') {
       '#description' => t("The target."),
       '#required' => TRUE,
     );
-    $form['donations_thermometer_amount'] = array(
+    $form['donations_thermometer_current'] = array(
       '#type' => 'textfield',
-      '#title' => t('Current Amount'),
-      '#default_value' => variable_get('donations_thermometer_amount', 50),
+      '#title' => t('Current number'),
+      '#default_value' => variable_get('donations_thermometer_current', 50),
       '#size' => 9,
       '#maxlength' => 10,
-      '#description' => t("The amount."),
+      '#description' => t("The current number."),
       '#required' => TRUE,
     );
-    $form['donations_thermometer_currency'] = array(
-      '#type' => 'select',
-      '#title' => t('Currency'),
-      '#default_value' => variable_get('donations_thermometer_currency', '$'),
-      '#options' => array(
-        '$' => '$',
-        '&pound;' => 'Pound',
-        '&yen;' => 'Yen',
-        '&euro;' => 'Euro',
-        '' => t('None'),
-      ),
-      '#description' => t("Choose a currency (if applicable) to be used with your amounts")
+    $form['donations_thermometer_prefix'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Prefix'),
+      '#default_value' => variable_get('donations_thermometer_prefix', ''),
+      '#size' => 9,
+      '#maxlength' => 10,
+      '#description' => t("A prefix."),
+      '#required' => FALSE,
+    );
+    $form['donations_thermometer_postfix'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Postfix'),
+      '#default_value' => variable_get('donations_thermometer_postfix', ''),
+      '#size' => 9,
+      '#maxlength' => 10,
+      '#description' => t("A postfix."),
+      '#required' => FALSE,
     );
     $form['donations_thermometer_size'] = array(
       '#type' => 'select',
@@ -118,8 +124,9 @@ function donations_thermometer_block_configure($delta = '') {
 function donations_thermometer_block_save($delta = '', $edit = array()) {
   if ($delta == 'thermometer') {
     variable_set('donations_thermometer_target', $edit['donations_thermometer_target']);
-    variable_set('donations_thermometer_amount', $edit['donations_thermometer_amount']);
-    variable_set('donations_thermometer_currency', $edit['donations_thermometer_currency']);
+    variable_set('donations_thermometer_current', $edit['donations_thermometer_current']);
+    variable_set('donations_thermometer_postfix', $edit['donations_thermometer_postfix']);
+    variable_set('donations_thermometer_prefix', $edit['donations_thermometer_prefix']);
     variable_set('donations_thermometer_size', $edit['donations_thermometer_size']);
   }
 }
@@ -130,7 +137,6 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
  * Adds validation of block configuration custom fields.
  */
 function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_state, $form_id) {
-  exit($form['module']['#value']);
   if ($form['module']['#value'] == 'donations_thermometer') {
     $form['#validate'][] = 'donations_thermometer_block_validate';
   }
@@ -142,25 +148,25 @@ function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_s
 function donations_thermometer_block_validate(&$form, $form_state) {
   $delta = $form['delta']['#value'];
   if ($delta == 'thermometer') {
-    $amount = $form_state['values']['donations_thermometer_amount'];
+    $current = $form_state['values']['donations_thermometer_current'];
     $total = $form_state['values']['donations_thermometer_target'];
 
-    if (!is_numeric($amount)) {
-      form_set_error('donations_thermometer_$amount', t('You must select a number for the current amount.'));
+    if (!is_numeric($current)) {
+      form_set_error('donations_thermometer_current', t('You must select a number for the current number.'));
     }
-    else if ($amount < 0) {
-      form_set_error('donations_thermometer_$amount', t('Current Amount must be positive.'));
+    else if ($current < 0) {
+      form_set_error('donations_thermometer_current', t('Current number must be positive.'));
     }
 
     if (!is_numeric($total)) {
-      form_set_error('donations_thermometer_$total', t('You must select a number for the target amount.'));
+      form_set_error('donations_thermometer_total', t('You must select a number for the target number.'));
     }
     else if ($total <= 0) {
-      form_set_error('donations_thermometer_$total', t('Target Amount must be positive.'));
+      form_set_error('donations_thermometer_total', t('Target number must be positive.'));
     }
 
-    if ($amount > $total) {
-      form_set_error('donations_thermometer_$amount', t('Current Amount must be equal to or less than the target amount.'));
+    if ($current > $total) {
+      form_set_error('donations_thermometer_current', t('Current number must be equal to or less than the target.'));
     }
   }
 }

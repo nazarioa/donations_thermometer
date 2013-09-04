@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_update().
+ */
+function donations_thermometer_update_7000() {
+  variable_set('donations_thermometer_current', variable_get('donations_thermometer_amount'));
+  variable_set('donations_thermometer_prefix', variable_get('donations_thermometer_currency'));
+  variable_del('donations_thermometer_amount');
+  variable_del('donations_thermometer_currency');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function donations_thermometer_uninstall() {
+  variable_del('donations_thermometer_amount');
+  variable_del('donations_thermometer_currency');
+  variable_del('donations_thermometer_target');
+  variable_del('donations_thermometer_current');
+  variable_del('donations_thermometer_size');
+  variable_del('donations_thermometer_prefix');
+  variable_del('donations_thermometer_postfix');
+}
