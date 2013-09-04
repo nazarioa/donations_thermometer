@@ -6,26 +6,6 @@
  */
 
 /**
- * Implementation of hook_menu().
- */
-function donations_thermometer_menu() {
-
-  $items = array();
-
-  $items['admin/config/media/donations_thermometer'] = array(
-    'title' => t('Donations Thermometer Settings'),
-    'description' => t('Edit the settings of the thermometer block'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('donations_thermometer_admin'),
-    'access arguments' => array('administer donations thermometer'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'includes/admin.inc',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_permission().
  */
 function donations_thermometer_permission() {
@@ -79,6 +59,110 @@ function donations_thermometer_block_view($delta) {
   }
 
   return $block;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function donations_thermometer_block_configure($delta = '') {
+  $form = array();
+  if ($delta == 'thermometer') {
+    $form['donations_thermometer_target'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Target'),
+      '#default_value' => variable_get('donations_thermometer_target', 100),
+      '#size' => 9,
+      '#maxlength' => 10,
+      '#description' => t("The target."),
+      '#required' => TRUE,
+    );
+    $form['donations_thermometer_amount'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Current Amount'),
+      '#default_value' => variable_get('donations_thermometer_amount', 50),
+      '#size' => 9,
+      '#maxlength' => 10,
+      '#description' => t("The amount."),
+      '#required' => TRUE,
+    );
+    $form['donations_thermometer_currency'] = array(
+      '#type' => 'select',
+      '#title' => t('Currency'),
+      '#default_value' => variable_get('donations_thermometer_currency', '$'),
+      '#options' => array(
+        '$' => '$',
+        '&pound;' => 'Pound',
+        '&yen;' => 'Yen',
+        '&euro;' => 'Euro',
+        '' => t('None'),
+      ),
+      '#description' => t("Choose a currency (if applicable) to be used with your amounts")
+    );
+    $form['donations_thermometer_size'] = array(
+      '#type' => 'select',
+      '#title' => t('Size'),
+      '#default_value' => variable_get('donations_thermometer_size', 'large'),
+      '#options' => array(
+        'large' => t('Large'),
+        'small' => t('Small'),
+      ),
+      '#description' => t("Choose what size to display the thermometer.")
+    );
+  }
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function donations_thermometer_block_save($delta = '', $edit = array()) {
+  if ($delta == 'thermometer') {
+    variable_set('donations_thermometer_target', $edit['donations_thermometer_target']);
+    variable_set('donations_thermometer_amount', $edit['donations_thermometer_amount']);
+    variable_set('donations_thermometer_currency', $edit['donations_thermometer_currency']);
+    variable_set('donations_thermometer_size', $edit['donations_thermometer_size']);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Adds validation of block configuration custom fields.
+ */
+function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_state, $form_id) {
+  exit($form['module']['#value']);
+  if ($form['module']['#value'] == 'donations_thermometer') {
+    $form['#validate'][] = 'donations_thermometer_block_validate';
+  }
+}
+
+/**
+ * Form validation callback of block configuration.
+ */
+function donations_thermometer_block_validate(&$form, $form_state) {
+  $delta = $form['delta']['#value'];
+  if ($delta == 'thermometer') {
+    $amount = $form_state['values']['donations_thermometer_amount'];
+    $total = $form_state['values']['donations_thermometer_target'];
+
+    if (!is_numeric($amount)) {
+      form_set_error('donations_thermometer_$amount', t('You must select a number for the current amount.'));
+    }
+    else if ($amount < 0) {
+      form_set_error('donations_thermometer_$amount', t('Current Amount must be positive.'));
+    }
+
+    if (!is_numeric($total)) {
+      form_set_error('donations_thermometer_$total', t('You must select a number for the target amount.'));
+    }
+    else if ($total <= 0) {
+      form_set_error('donations_thermometer_$total', t('Target Amount must be positive.'));
+    }
+
+    if ($amount > $total) {
+      form_set_error('donations_thermometer_$amount', t('Current Amount must be equal to or less than the target amount.'));
+    }
+  }
 }
 
 /**
