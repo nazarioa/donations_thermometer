@@ -1,0 +1,7 @@
+name = Donations Thermometer Panels Panes
+description = "Supplies panels content panes with donations thermometers"
+core = 7.x
+
+dependencies[] = ctools
+dependencies[] = donations_thermometer
+
