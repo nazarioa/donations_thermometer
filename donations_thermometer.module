@@ -54,7 +54,7 @@ function donations_thermometer_block_view($delta) {
     $postfix = variable_get('donations_thermometer_postfix', '');
     $size = variable_get('donations_thermometer_size', 'large');
 
-    $block['subject'] = t('Donations Thermometer');
+    $block['subject'] = t('Progress Thermometer');
 
     $block['content'] = theme('donations_thermometer', array('current' => $current, 'target' => $target, 'prefix' => $prefix, 'postfix' => $postfix, 'size' => $size));
   }

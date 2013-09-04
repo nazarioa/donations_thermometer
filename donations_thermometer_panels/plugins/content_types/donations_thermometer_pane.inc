@@ -7,10 +7,10 @@ $plugin = array(
   'single' => TRUE,  // Just do this one, it is needed.
   'title' => t('Donations Thermometer Pane'),  // Title to show up on the pane screen.
   'description' => t('Adds a donation thermometer'), // Description to show up on the pane screen.
-  'category' => t('My Module'), // A category to put this under.
-  'edit form' => 'mymod_pane_custom_pane_edit_form', // A function that will return the settings form for the pane.
-  'render callback' => 'mymod_pane_custom_pane_render', // A function that will return the renderable content.
-  'admin info' => 'mymod_pane_custom_pane_admin_info', // A function that will return the information displayed on the admin screen (optional).
+  'category' => t('Thermometer'), // A category to put this under.
+  'edit form' => 'donations_thermometer_panels_pane_custom_pane_edit_form', // A function that will return the settings form for the pane.
+  'render callback' => 'donations_thermometer_panels_pane_custom_pane_render', // A function that will return the renderable content.
+  'admin info' => 'donations_thermometer_panels_pane_custom_pane_admin_info', // A function that will return the information displayed on the admin screen (optional).
   'defaults' => array( // Array of defaults for the settings form.
     'donations_thermometer_target' => 100,
     'donations_thermometer_current' => 50,
@@ -24,7 +24,7 @@ $plugin = array(
 /**
  * An edit form for the pane's settings.
  */
-function mymod_pane_custom_pane_edit_form($form, &$form_state) {
+function donations_thermometer_panels_pane_custom_pane_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
  
   $form['donations_thermometer_target'] = array(
@@ -81,7 +81,7 @@ function mymod_pane_custom_pane_edit_form($form, &$form_state) {
  * Submit function, note anything in the formstate[conf] automatically gets saved
  * Notice, the magic that automatically does that for you.
  */
-function mymod_pane_custom_pane_edit_form_submit(&$form, &$form_state) {
+function donations_thermometer_panels_pane_custom_pane_edit_form_submit(&$form, &$form_state) {
   foreach (array_keys($form_state['plugin']['defaults']) as $key) {
     if (isset($form_state['values'][$key])) {
       $form_state['conf'][$key] = $form_state['values'][$key];
@@ -93,7 +93,7 @@ function mymod_pane_custom_pane_edit_form_submit(&$form, &$form_state) {
  * Run-time rendering of the body of the block (content type)
  * See ctools_plugin_examples for more advanced info
  */
-function mymod_pane_custom_pane_render($subtype, $conf, $args, $contexts) {
+function donations_thermometer_panels_pane_custom_pane_render($subtype, $conf, $args, $contexts) {
   $current = $conf['donations_thermometer_current'];
   $target = $conf['donations_thermometer_target'];
   $prefix = $conf['donations_thermometer_prefix'];
@@ -112,7 +112,7 @@ function mymod_pane_custom_pane_render($subtype, $conf, $args, $contexts) {
 /**
  * 'admin info' callback for panel pane.
  */
-function mymod_pane_custom_pane_admin_info($subtype, $conf, $contexts) {
+function donations_thermometer_panels_pane_custom_pane_admin_info($subtype, $conf, $contexts) {
   if (!empty($conf)) {
     $block = new stdClass;
     $block->title = $conf['override_title'] ? $conf['override_title_text'] : '';
