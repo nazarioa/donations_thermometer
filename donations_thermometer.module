@@ -126,10 +126,9 @@ function donations_thermometer_block_info() {
 function donations_thermometer_block_view($delta) {
   $block = array();
   $parts = explode('-', $delta);
-  $block_number = $parts[1];
 
   if ($parts[0] == 'donations_thermometer_block'){
-
+    $block_number = $parts[1];
     $campaign_name = variable_get('donations_thermometer_block-' . $block_number . '-campaign_name', '');
 
     // Classy
