@@ -1,23 +1,86 @@
 <?php
 
 /**
- * @file
- * Allows creation of a progress bar block to visually show amount of donations etc
- */
+* @file
+* Allows creation of a progress bar block to visually show amount of donations etc
+*/
 
 /**
- * Implements hook_permission().
- */
+* Implements hook_permission().
+*/
 function donations_thermometer_permission() {
   return array('administer donations thermometer' => array(
-      'title' => t('Adminster Donations Thermometer'),
-    ),
-  );
+    'title' => t('Adminster Donations Thermometer'),
+  ));
 }
 
+
 /**
- * Implementation of hook_theme().
- */
+* Imeplements hook_menu().
+*/
+function donations_thermometer_menu(){
+  $items = array();
+
+  // Admin Configuration Group
+  // When an admin has logged in -- this creates a group
+  // under the configuration page.
+  $items['admin/config/donations_thermometer'] = array(
+    'title' => 'Donations Thermometer',
+    'description' => 'Administer Donations Thermometer Options',
+    'access arguments' => array('admin donations_thermometer settings'),
+  );
+
+  // Admin configuration - Settings
+  // Adds a link under the Admin Configuration Group
+  // mentioned in the above block.
+  $items['admin/config/donations_thermometer/manage'] = array(
+    'title' => 'Donations Thermometer Settings',
+    'description' => 'Manage Donations Thermometer Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('donations_thermometer_admin_settings_form'),
+    'access arguments' => array('donations_thermometer agegate settings'),
+  );
+
+  return $items;
+}
+
+
+/**
+* Implements hook_form().
+*/
+function donations_thermometer_admin_settings_form($node, &$form_state) {
+  //TODO: needs valdiation. Must be a number greater than 0
+  $form = array();
+
+  // $form['overview'] = array(
+  //   '#markup' => t('This interface allows administrators to manage settings for the Agegate.'),
+  //   '#prefix' => '<p>',
+  //   '#suffix' => '</p>'
+  // );
+
+
+  // GENERAL //
+  $form['general'] = array(
+    '#title' => t('General Settings'),
+    '#description' => t('General Settings. Individual meter settings can be found in the blocks for the resepctive item.'),
+    '#type' => 'fieldset',
+    '#collapsible' => FALSE,
+  );
+  $form['general']['donations_thermometer_number_of_meters'] = array(
+    '#title' => t('Number of Donation Meters'),
+    '#description' => t('You can have as many donation meters as you like. Set the number here and configure each donation meter in the settings.'),
+    '#type' => 'textfield',
+    '#size' => 4,
+    '#default_value' => variable_get('donations_thermometer_number_of_meters', 1),
+  );
+
+  return system_settings_form($form);
+}
+
+
+/**
+* Implementation of hook_theme().
+*/
 function donations_thermometer_theme($existing, $type, $theme, $path) {
   $items = array();
 
@@ -30,121 +93,246 @@ function donations_thermometer_theme($existing, $type, $theme, $path) {
   return $items;
 }
 
+
 /**
- * Implements hook_block_info().
- */
+* Implements hook_block_info().
+*
+* Define all blocks provided by the module.
+* This hook declares to Drupal what blocks are provided by your module and can optionally specify initial block configuration settings.
+*/
 function donations_thermometer_block_info() {
-  $blocks = array();
-  $blocks['thermometer'] = array(
-    'info' => t("Donations Thermometer"),
-  );
+  $number_of_blocks = variable_get('donations_thermometer_number_of_meters', 1);
+  $block_number = 1;
+
+  while ($block_number <= $number_of_blocks) {
+    $campaign_name = '';
+    if( !empty(variable_get('donations_thermometer_block-' . $block_number . '-campaign_name')) ){
+      $campaign_name = variable_get('donations_thermometer_block-' . $block_number . '-campaign_name');
+    }
+
+    $blocks['donations_thermometer_block-' . $block_number] = array(
+      'info' => t('Donations Thermometer: ' . $block_number . ' ' . $campaign_name),
+      'cache' => DRUPAL_NO_CACHE,
+    );
+    $block_number++;
+  }
   return $blocks;
 }
 
+
 /**
- * Implements hook_block_view().
- */
+* Implements hook_block_view().
+*/
 function donations_thermometer_block_view($delta) {
   $block = array();
+  $parts = explode('-', $delta);
+  $block_number = $parts[1];
 
-  if ($delta == 'thermometer') {
-    $current = variable_get('donations_thermometer_current', 50);
-    $target = variable_get('donations_thermometer_target', 100);
-    $prefix = variable_get('donations_thermometer_prefix', '$');
-    $postfix = variable_get('donations_thermometer_postfix', '');
-    $size = variable_get('donations_thermometer_size', 'large');
+  if ($parts[0] == 'donations_thermometer_block'){
 
-    $block['subject'] = t('Progress Thermometer');
+    // Classy
+    if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
+      $block['subject'] = t($campaign_name);
+      $block['content'] = theme('donations_thermometer', donations_thermometer__classy_block($block_number) );
+    }
 
-    $block['content'] = theme('donations_thermometer', array('current' => $current, 'target' => $target, 'prefix' => $prefix, 'postfix' => $postfix, 'size' => $size));
+    // Manual
+    elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual'){
+      $block['subject'] = t($campaign_name);
+      $block['content'] = theme('donations_thermometer', donations_thermometer__manual_block($block_number) );
+    }
+
+    else{
+      //Block type has not been configured
+    }
   }
 
   return $block;
 }
 
+
 /**
- * Implements hook_block_configure().
- */
+* Implements hook_block_configure().
+*/
 function donations_thermometer_block_configure($delta = '') {
   $form = array();
-  if ($delta == 'thermometer') {
-    $form['donations_thermometer_target'] = array(
+  $parts = explode('-', $delta);
+  $block_number = $parts[1];
+
+  if ($parts[0] == 'donations_thermometer_block') {
+    $form['donations_thermometer_block-' . $block_number . '-campaign_name'] = array(
       '#type' => 'textfield',
-      '#title' => t('Target'),
-      '#default_value' => variable_get('donations_thermometer_target', 100),
-      '#size' => 9,
-      '#maxlength' => 10,
-      '#description' => t("The target."),
-      '#required' => TRUE,
+      '#title' => t('Campaign Name'),
+      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-campaign_name'),
     );
-    $form['donations_thermometer_current'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Current number'),
-      '#default_value' => variable_get('donations_thermometer_current', 50),
-      '#size' => 9,
-      '#maxlength' => 10,
-      '#description' => t("The current number."),
-      '#required' => TRUE,
-    );
-    $form['donations_thermometer_prefix'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Prefix'),
-      '#default_value' => variable_get('donations_thermometer_prefix', ''),
-      '#size' => 9,
-      '#maxlength' => 10,
-      '#description' => t("A prefix."),
-      '#required' => FALSE,
-    );
-    $form['donations_thermometer_postfix'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Postfix'),
-      '#default_value' => variable_get('donations_thermometer_postfix', ''),
-      '#size' => 9,
-      '#maxlength' => 10,
-      '#description' => t("A postfix."),
-      '#required' => FALSE,
-    );
-    $form['donations_thermometer_size'] = array(
+    $form['donations_thermometer_block-' . $block_number . '-type'] = array(
       '#type' => 'select',
-      '#title' => t('Size'),
-      '#default_value' => variable_get('donations_thermometer_size', 'large'),
+      '#title' => t('Thermometer Type'),
+      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-type', 'empty'),
       '#options' => array(
-        'large' => t('Large'),
-        'small' => t('Small'),
+        'manual' => t('Manual'),
+        'classy' => t('Classy.org')
       ),
-      '#description' => t("Choose what size to display the thermometer.")
+      '#description' => t('You must save after this setting has been changed.')
     );
+
+    // Classy.org
+    if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
+      $form['donations_thermometer_block-' . $block_number . '-classy_token'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Classy Token'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_token'),
+        '#description' => t("API Access Token"),
+      );
+      $form['donations_thermometer_block-' . $block_number . '-classy_cid'] = array(
+        '#type' => 'textfield',
+        '#title' => t('CID Number'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_cid'),
+        '#description' => t("Classy Merchant ID"),
+      );
+      $form['donations_thermometer_block-' . $block_number . '-classy_eid'] = array(
+        '#type' => 'textfield',
+        '#title' => t('EID Number'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_eid'),
+        '#description' => t("Classy Campaign ID"),
+      );
+      $form['donations_thermometer_block-' . $block_number . '-orientation'] = array(
+        '#type' => 'select',
+        '#title' => t('Display Orientation'),
+        '#default_value' => variable_get('donations_thermometer_block' . $block_number . '-orientation', 0),
+        '#options' => array(
+          0 => t('Vertical'),
+          1 => t('Horizontal')
+        ),
+      );
+    }
+    // Manual
+    elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual'){
+      $form['donations_thermometer_block-' . $block_number . '-target'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Target'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-target', 100),
+        '#size' => 9,
+        '#maxlength' => 10,
+        '#description' => t("The target."),
+        '#required' => TRUE,
+      );
+      $form['donations_thermometer_block-' . $block_number . '-current'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Current number'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-current', 50),
+        '#size' => 9,
+        '#maxlength' => 10,
+        '#description' => t("The current number."),
+        '#required' => TRUE,
+      );
+      $form['donations_thermometer_block-' . $block_number . '-prefix'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Prefix'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-prefix', ''),
+        '#size' => 9,
+        '#maxlength' => 10,
+        '#description' => t("A prefix."),
+        '#required' => FALSE,
+      );
+      $form['donations_thermometer_block-' . $block_number . '-postfix'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Postfix'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-postfix', ''),
+        '#size' => 9,
+        '#maxlength' => 10,
+        '#description' => t("A postfix."),
+        '#required' => FALSE,
+      );
+      $form['donations_thermometer_block-' . $block_number . '-size'] = array(
+        '#type' => 'select',
+        '#title' => t('Size'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-size', 'large'),
+        '#options' => array(
+          'large' => t('Large'),
+          'small' => t('Small'),
+        ),
+        '#description' => t("Choose what size to display the thermometer.")
+      );
+      $form['donations_thermometer_block-' . $block_number . '-orientation'] = array(
+        '#type' => 'select',
+        '#title' => t('Display Orientation'),
+        '#default_value' => variable_get('donations_thermometer_block' . $block_number . '-orientation', 0),
+        '#options' => array(
+          0 => t('Vertical'),
+          1 => t('Horizontal')
+        ),
+      );
+    }
   }
+
   return $form;
 }
 
+
 /**
- * Implements hook_block_save().
- */
+* Implements hook_block_save().
+*/
 function donations_thermometer_block_save($delta = '', $edit = array()) {
-  if ($delta == 'thermometer') {
-    variable_set('donations_thermometer_target', $edit['donations_thermometer_target']);
-    variable_set('donations_thermometer_current', $edit['donations_thermometer_current']);
-    variable_set('donations_thermometer_postfix', $edit['donations_thermometer_postfix']);
-    variable_set('donations_thermometer_prefix', $edit['donations_thermometer_prefix']);
-    variable_set('donations_thermometer_size', $edit['donations_thermometer_size']);
+  $parts = explode('-', $delta);
+  $block_number = $parts[1];
+  $type = $edit['donations_thermometer_block-' . $block_number . '-type'];
+
+  if($type == 'classy' && $parts[0] == 'donations_thermometer_block'){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-campaign_name'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-campaign_name', $edit['donations_thermometer_block-' . $block_number . '-campaign_name']);
+    }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-type'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-type', $edit['donations_thermometer_block-' . $block_number . '-type']);
+    }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-classy_token'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-classy_token', $edit['donations_thermometer_block-' . $block_number . '-classy_token']);
+    }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-classy_cid'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-classy_cid', $edit['donations_thermometer_block-' . $block_number . '-classy_cid']);
+    }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-classy_eid'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-classy_eid', $edit['donations_thermometer_block-' . $block_number . '-classy_eid']);
+    }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-orientation'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-orientation', $edit['donations_thermometer_block-' . $block_number . '-orientation']);
+    }
+  }
+  elseif($type == 'manual' && $parts[0] == 'donations_thermometer_block'){
+    //TODO: isset for these
+    variable_set('donations_thermometer_block-' . $block_number . '-campaign_name', $edit['donations_thermometer_block-' . $block_number . '-campaign_name']);
+    variable_set('donations_thermometer_block-' . $block_number . '-type', $edit['donations_thermometer_block-' . $block_number . '-type']);
+    variable_set('donations_thermometer_block-' . $block_number . '-target', $edit['donations_thermometer_block-' . $block_number . '-target']);
+    variable_set('donations_thermometer_block-' . $block_number . '-current', $edit['donations_thermometer_block-' . $block_number . '-current']);
+    variable_set('donations_thermometer_block-' . $block_number . '-postfix', $edit['donations_thermometer_block-' . $block_number . '-postfix']);
+    variable_set('donations_thermometer_block-' . $block_number . '-prefix', $edit['donations_thermometer_block-' . $block_number . '-prefix']);
+    variable_set('donations_thermometer_block-' . $block_number . '-size', $edit['donations_thermometer_block-' . $block_number . '-size']);
+    variable_set('donations_thermometer_block-' . $block_number . '-orientation', $edit['donations_thermometer_block-' . $block_number . '-orientation']);
+  }
+  else{
+    if($parts[0] == 'donations_thermometer_block'){
+      variable_set('donations_thermometer_block-' . $block_number . '-campaign_name', $edit['donations_thermometer_block-' . $block_number . '-campaign_name']);
+      variable_set('donations_thermometer_block-' . $block_number . '-type', $edit['donations_thermometer_block-' . $block_number . '-type']);
+    }
   }
 }
 
+
 /**
- * Implements hook_form_FORM_ID_alter().
- *
- * Adds validation of block configuration custom fields.
- */
+* Implements hook_form_FORM_ID_alter().
+*
+* Adds validation of block configuration custom fields.
+*/
 function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_state, $form_id) {
   if ($form['module']['#value'] == 'donations_thermometer') {
     $form['#validate'][] = 'donations_thermometer_block_validate';
   }
 }
 
+
 /**
- * Form validation callback of block configuration.
- */
+* Form validation callback of block configuration.
+*/
 function donations_thermometer_block_validate(&$form, $form_state) {
   $delta = $form['delta']['#value'];
   if ($delta == 'thermometer') {
@@ -171,9 +359,10 @@ function donations_thermometer_block_validate(&$form, $form_state) {
   }
 }
 
+
 /**
- * Implementation of hook_init().
- */
+* Implementation of hook_init().
+*/
 function donations_thermometer_init() {
   // We add CSS and JS files here — adding it in hook_block() or
   // in the theme function is incompatible with the block cache.
@@ -181,4 +370,33 @@ function donations_thermometer_init() {
   $module_path = drupal_get_path('module', 'donations_thermometer');
   drupal_add_js($module_path .'/js/donations_thermometer.js');
   drupal_add_css($module_path .'/css/donations_thermometer.css');
+}
+
+/* ************* */
+
+/**
+* MODULE SPECIFC FUNCTIONS
+*/
+function donations_thermometer__classy_block($block_number){
+  $campaign_name = variable_get('donations_thermometer_block-' . $block_number . '-campaign_name');
+  $token = variable_get('donations_thermometer_block-' . $block_number . '-classy_token');
+  $cid = variable_get('donations_thermometer_block-' . $block_number . '-classy_cid');
+  $eid = variable_get('donations_thermometer_block-' . $block_number . '-classy_eid');
+  $orientation = variable_get('donations_thermometer_block-' . $block_number . '-orientation');
+
+  return compact('campaign_name', 'token', 'cid', 'eid', 'orientation');
+}
+
+
+function donations_thermometer__manual_block($block_number){
+  // TODO: Fix the following
+  $campaign_name = variable_get('donations_thermometer_block-' . $block_number . '-campaign_name');
+  $target = variable_get('donations_thermometer_block-' . $block_number . '-target');
+  $current = variable_get('donations_thermometer_block-' . $block_number . '-current');
+  $postfix = variable_get('donations_thermometer_block-' . $block_number . '-postfix');
+  $prefix = variable_get('donations_thermometer_block-' . $block_number . '-prefix');
+  $size = variable_get('donations_thermometer_block-' . $block_number . '-size');
+  $orientation = variable_get('donations_thermometer_block-' . $block_number . '-orientation');
+
+  return compact('current', 'target', 'prefix', 'postfix', 'size', 'orientation');
 }
