@@ -130,6 +130,8 @@ function donations_thermometer_block_view($delta) {
 
   if ($parts[0] == 'donations_thermometer_block'){
 
+    $campaign_name = variable_get('donations_thermometer_block-' . $block_number . '-campaign_name', '');
+
     // Classy
     if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
       $block['subject'] = t($campaign_name);
@@ -382,6 +384,9 @@ function donations_thermometer_init() {
   // We add CSS and JS files here — adding it in hook_block() or
   // in the theme function is incompatible with the block cache.
   // See http://drupal.org/node/214856.
+
+  // Upon further reading this is mostly an issue with drupal_add_css()
+  // My changes requires that  drupal_add_js() be done in the hook_block().
   $module_path = drupal_get_path('module', 'donations_thermometer');
   drupal_add_js($module_path .'/js/donations_thermometer.js');
   drupal_add_css($module_path .'/css/donations_thermometer.css');
