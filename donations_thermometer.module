@@ -189,18 +189,21 @@ function donations_thermometer_block_configure($delta = '') {
         '#title' => t('Classy Token'),
         '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_token'),
         '#description' => t("API Access Token"),
+        '#required' => TRUE,
       );
       $form['donations_thermometer_block-' . $block_number . '-classy_cid'] = array(
         '#type' => 'textfield',
         '#title' => t('CID Number'),
         '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_cid'),
         '#description' => t("Classy Merchant ID"),
+        '#required' => TRUE,
       );
       $form['donations_thermometer_block-' . $block_number . '-classy_eid'] = array(
         '#type' => 'textfield',
         '#title' => t('EID Number'),
         '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_eid'),
         '#description' => t("Classy Campaign ID"),
+        '#required' => TRUE,
       );
       $form['donations_thermometer_block-' . $block_number . '-prefix'] = array(
         '#type' => 'textfield',
@@ -228,6 +231,7 @@ function donations_thermometer_block_configure($delta = '') {
           0 => t('Vertical'),
           1 => t('Horizontal')
         ),
+        "#empty_option" => t('Please Select'),
       );
     }
     // Manual
@@ -238,7 +242,7 @@ function donations_thermometer_block_configure($delta = '') {
         '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-goal', 100),
         '#size' => 9,
         '#maxlength' => 10,
-        '#description' => t("The target."),
+        '#description' => t("The Goal amount of the thermometer"),
         '#required' => TRUE,
       );
       $form['donations_thermometer_block-' . $block_number . '-current'] = array(
@@ -247,7 +251,7 @@ function donations_thermometer_block_configure($delta = '') {
         '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-current', 50),
         '#size' => 9,
         '#maxlength' => 10,
-        '#description' => t("The current number."),
+        '#description' => t("The current progress amount"),
         '#required' => TRUE,
       );
       $form['donations_thermometer_block-' . $block_number . '-prefix'] = array(
@@ -276,6 +280,7 @@ function donations_thermometer_block_configure($delta = '') {
           'large' => t('Large'),
           'small' => t('Small'),
         ),
+        "#empty_option" => t('Please Select'),
         '#description' => t("Choose what size to display the thermometer.")
       );
       $form['donations_thermometer_block-' . $block_number . '-orientation'] = array(
@@ -286,6 +291,7 @@ function donations_thermometer_block_configure($delta = '') {
           0 => t('Vertical'),
           1 => t('Horizontal')
         ),
+        "#empty_option" => t('Please Select'),
       );
     }
   }
@@ -303,7 +309,6 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
   $type = $edit['donations_thermometer_block-' . $block_number . '-type'];
 
   if($type == 'classy' && $parts[0] == 'donations_thermometer_block'){
-    //TODO: test the credentails on save
     if(isset($edit['donations_thermometer_block-' . $block_number . '-campaign_name'])){
       variable_set('donations_thermometer_block-' . $block_number . '-campaign_name', $edit['donations_thermometer_block-' . $block_number . '-campaign_name']);
     }
@@ -433,6 +438,7 @@ function donations_thermometer__classy_block($block_number){
   $eid = variable_get('donations_thermometer_block-' . $block_number . '-classy_eid');
   $postfix = variable_get('donations_thermometer_block-' . $block_number . '-postfix');
   $prefix = variable_get('donations_thermometer_block-' . $block_number . '-prefix');
+  $size = variable_get('donations_thermometer_block-' . $block_number . '-size');
   $orientation = variable_get('donations_thermometer_block-' . $block_number . '-orientation');
 
   // TODO: if it has been more than X number of minutes, get new data
@@ -448,8 +454,6 @@ function donations_thermometer__classy_block($block_number){
 
   $num_donations = $data->num_donations;
   $num_donors = $data->num_donors;
-
-  $size = 'small'; //TODO:
 
   return compact('block_id', 'campaign_name', 'goal', 'current', 'num_donations', 'num_donors', 'size', 'prefix', 'postfix', 'orientation', 'percent');
 }
