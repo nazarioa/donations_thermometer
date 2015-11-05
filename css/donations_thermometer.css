@@ -7,7 +7,7 @@
   background: #333 url(../images/gauge-small.gif) top left no-repeat;
 }
 
-.gauge-small #campaign-progress-current {
+.gauge-small .current-value {
   position:absolute;
   left: 0px;
   bottom: 0px;
@@ -24,7 +24,7 @@
   position:relative;
   background: #333 url(../images/gauge.gif) top left no-repeat;
 }
-.gauge-large #campaign-progress-current {
+.gauge-large .current-value{
   position:absolute;
   left: 0px;
   bottom: 0px;
@@ -35,7 +35,7 @@
 
 /* General Size */
 
-.gauge-large #campaign-progress-current p,
-.gauge-small #campaign-progress-current p {
+.gauge-large .current-value  p,
+.gauge-small .current-value  p {
   display:none;
 }
