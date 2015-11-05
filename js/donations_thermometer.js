@@ -3,7 +3,7 @@
   Drupal.behaviors.donations_thermometer = {
     attach: function(context, settings) {
       var BLOCK_ID = Drupal.settings.donations_thermometer.block_number;
-      var ORIENTATION = Drupal.settings.donations_thermometer.block_number;
+      var ORIENTATION = Drupal.settings.donations_thermometer.orientation;
 
       $.gauge = {
 
@@ -15,7 +15,6 @@
           if (!$('#donations_thermometer-' + BLOCK_ID)) {
             return false;
           }
-          console.log('Made it here: ' + BLOCK_ID);
           this.resetValue();
           this.animateGauge();
         },
@@ -38,7 +37,6 @@
             var currHeight = this.progressMeter.outerHeight();
 
             if (currHeight < this.goalHeight){
-              //animate growth
               var interval = Math.ceil((this.goalHeight - currHeight) / 10);
               this.progressMeter.css('height', (currHeight + interval) );
               setTimeout("jQuery.gauge.animateGauge()",30);
@@ -48,7 +46,6 @@
             var currWidth = this.progressMeter.outerWidth();
 
             if (currWidth < this.goalWidth){
-              //animate growth
               var interval = Math.ceil((this.goalWidth - currWidth) / 10);
               this.progressMeter.css('width', (currWidth + interval) );
               setTimeout("jQuery.gauge.animateGauge()",30);
