@@ -482,12 +482,9 @@ function donations_thermometer__classy_block($block_number){
   $last_update = variable_get('donations_thermometer_block-' . $block_number . '-last_update');
   $interval = new DateInterval('PT' . $update_frequency . 'M');
 
-  try{
+  if( !empty($last_update) ){
     $last_update->add($interval);
-  } catch (Exception $e) {
-    $last_update = null;
   }
-
 
   if( empty($last_update) || ($now > $last_update) ){
     $json = @file_get_contents('https://www.classy.org/api1/campaign-info?token=' . $token . '&cid=' . $cid . '&eid=' . $eid);
