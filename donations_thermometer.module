@@ -288,8 +288,8 @@ function donations_thermometer_block_configure($delta = '') {
         '#title' => t('Display Orientation'),
         '#default_value' => variable_get('donations_thermometer_block' . $block_number . '-orientation', 0),
         '#options' => array(
-          0 => t('Vertical'),
-          1 => t('Horizontal')
+          'vertical' => t('Vertical'),
+          'horizontal' => t('Horizontal')
         ),
         "#empty_option" => t('Please Select'),
       );
