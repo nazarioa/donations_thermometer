@@ -488,7 +488,6 @@ function donations_thermometer__classy_block($block_number){
     $last_update = null;
   }
 
-
   if( empty($last_update) || ($now > $last_update) ){
     $json = @file_get_contents('https://www.classy.org/api1/campaign-info?token=' . $token . '&cid=' . $cid . '&eid=' . $eid);
     if($json){
