@@ -1,0 +1,3 @@
+name = Donations Thermometer
+description = "Allows creation of a thermometer block to visually show amount of donations etc"
+core = 7.x
