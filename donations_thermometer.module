@@ -146,6 +146,9 @@ function donations_thermometer_block_view($delta) {
     else{
       //Block type has not been configured
     }
+
+    $module_path = drupal_get_path('module', 'donations_thermometer');
+    drupal_add_js($module_path .'/js/donations_thermometer.js');
   }
 
   return $block;
@@ -174,6 +177,7 @@ function donations_thermometer_block_configure($delta = '') {
         'manual' => t('Manual'),
         'classy' => t('Classy.org')
       ),
+      "#empty_option" => t('Please Select'),
       '#description' => t('You must save after this setting has been changed.')
     );
 
@@ -387,7 +391,6 @@ function donations_thermometer_init() {
   // Upon further reading this is mostly an issue with drupal_add_css()
   // My changes requires that  drupal_add_js() be done in the hook_block().
   $module_path = drupal_get_path('module', 'donations_thermometer');
-  drupal_add_js($module_path .'/js/donations_thermometer.js');
   drupal_add_css($module_path .'/css/donations_thermometer.css');
 }
 
