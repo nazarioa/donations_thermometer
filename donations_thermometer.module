@@ -453,7 +453,7 @@ function donations_thermometer__classy_block($block_number){
 
   $goal = $data->goal;
   $current = $data->total_raised;
-  $percent = ($current / $goal) * 100;
+  $percent = round(($current / $goal) * 100, 3);
 
   $num_donations = $data->num_donations;
   $num_donors = $data->num_donors;
@@ -471,7 +471,7 @@ function donations_thermometer__manual_block($block_number){
   $prefix = variable_get('donations_thermometer_block-' . $block_number . '-prefix');
   $size = variable_get('donations_thermometer_block-' . $block_number . '-size');
   $orientation = variable_get('donations_thermometer_block-' . $block_number . '-orientation');
-  $percent = ($current / $goal) * 100;
+  $percent = round(($current / $goal) * 100, 3);
 
   return compact('block_id', 'current', 'goal', 'prefix', 'postfix', 'size', 'orientation', 'percent');
 }
