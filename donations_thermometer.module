@@ -208,6 +208,20 @@ function donations_thermometer_block_configure($delta = '') {
         '#description' => t("Classy Campaign ID"),
         '#required' => TRUE,
       );
+      $form['donations_thermometer_block-' . $block_number . '-update_frequency'] = array(
+        '#type' => 'select',
+        '#title' => t('Data Update Frequency'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-update_frequency', 30),
+        '#options' => array(
+          5 => t('5 Minutes'),
+          10 => t('10 Minutes'),
+          30 => t('30 Minutes'),
+          60 => t('1 Hour'),
+          1440 => t('24 Hours'),
+        ),
+        "#empty_option" => t('Please Select'),
+        '#description' => t("How often should new data be gathered from Classy.org")
+      );
       $form['donations_thermometer_block-' . $block_number . '-prefix'] = array(
         '#type' => 'textfield',
         '#title' => t('Prefix'),
@@ -450,27 +464,49 @@ function donations_thermometer_init() {
 function donations_thermometer__classy_block($block_number){
   $block_id = $block_number;
   $campaign_name = variable_get('donations_thermometer_block-' . $block_number . '-campaign_name');
+  $goal = variable_get('donations_thermometer_block-' . $block_number . '-goal', 1);
+  $current = variable_get('donations_thermometer_block-' . $block_number . '-current', 0);
   $token = variable_get('donations_thermometer_block-' . $block_number . '-classy_token');
   $cid = variable_get('donations_thermometer_block-' . $block_number . '-classy_cid');
   $eid = variable_get('donations_thermometer_block-' . $block_number . '-classy_eid');
+  $num_donors = variable_get('donations_thermometer_block-' . $block_number . '-num_donors');
+  $num_donations = variable_get('donations_thermometer_block-' . $block_number . '-num_donations');
   $postfix = variable_get('donations_thermometer_block-' . $block_number . '-postfix');
   $prefix = variable_get('donations_thermometer_block-' . $block_number . '-prefix');
   $size = variable_get('donations_thermometer_block-' . $block_number . '-size');
   $orientation = variable_get('donations_thermometer_block-' . $block_number . '-orientation');
 
-  // TODO: if it has been more than X number of minutes, get new data
-  $json = file_get_contents('https://www.classy.org/api1/campaign-info?token=' . $token . '&cid=' . $cid . '&eid=' . $eid);
-  // you can save $json to a file, if needed :
-  // file_put_contents('file/path/my-file.txt', $json);
-  $data = json_decode($json);
-  // also need to handle failed download
+  $update_frequency = variable_get('donations_thermometer_block-' . $block_number . '-update_frequency', 30);
 
-  $goal = $data->goal;
-  $current = $data->total_raised;
+  $now = new DateTime();
+  $last_update = variable_get('donations_thermometer_block-' . $block_number . '-last_update');
+  $interval = new DateInterval('PT' . $update_frequency . 'M');
+
+  $last_update->add($interval);
+
+  if( empty($last_update) || ($now > $last_update) ){
+    $json = @file_get_contents('https://www.classy.org/api1/campaign-info?token=' . $token . '&cid=' . $cid . '&eid=' . $eid);
+    if($json){
+      $data = json_decode($json);
+
+      variable_set('donations_thermometer_block-' . $block_number . '-last_update', $now);
+
+      $goal = $data->goal;
+      variable_set('donations_thermometer_block-' . $block_number . '-goal', $goal);
+
+      $current = $data->total_raised;
+      variable_set('donations_thermometer_block-' . $block_number . '-current', $current);
+
+      $num_donations = $data->num_donations;
+      variable_set('donations_thermometer_block-' . $block_number . '-num_donations', $num_donations);
+
+      $num_donors = $data->num_donors;
+      variable_set('donations_thermometer_block-' . $block_number . '-num_donors', $num_donors);
+    }
+    //else: there was an error so we will fall back on old data
+  }
+
   $percent = round(($current / $goal) * 100, 3);
-
-  $num_donations = $data->num_donations;
-  $num_donors = $data->num_donors;
 
   return compact('block_id', 'campaign_name', 'goal', 'current', 'num_donations', 'num_donors', 'size', 'prefix', 'postfix', 'orientation', 'percent');
 }
