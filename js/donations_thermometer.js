@@ -4,6 +4,7 @@
     attach: function(context, settings) {
       var BLOCK_ID = Drupal.settings.donations_thermometer.block_number;
       var ORIENTATION = Drupal.settings.donations_thermometer.orientation;
+      var PERCENTAGE = Drupal.settings.donations_thermometer.percent;
 
       $.gauge = {
 
@@ -15,18 +16,24 @@
           if (!$('#donations_thermometer-' + BLOCK_ID)) {
             return false;
           }
-          this.resetValue();
-          this.animateGauge();
+          // this.resetValue();
+          // setTimeout(this.animateGauge(), 10000);
         },
 
         resetValue : function() {
           if (!$('#donations_thermometer-' + BLOCK_ID)) {
             return false;
           }
-          this.progressMeter = $('#donations_thermometer-' + BLOCK_ID + ' .current-value');
-          this.goalHeight = this.progressMeter.outerHeight();
-          this.goalWidth = this.progressMeter.outerWidth();
-          this.progressMeter.css('height', 0);
+          if(ORIENTATION === 'vertical'){
+            this.progressMeter = $('#donations_thermometer-' + BLOCK_ID + ' .current-value');
+            this.goalHeight = this.progressMeter.outerWidth();
+            this.progressMeter.css('height', 0);
+          }
+          else if (ORIENTATION === 'horizontal') {
+            this.progressMeter = $('#donations_thermometer-' + BLOCK_ID + ' .current-value');
+            this.goalWidth = this.progressMeter.outerHeight();
+            this.progressMeter.css('width', 0);
+          }
         },
 
         animateGauge : function(){
