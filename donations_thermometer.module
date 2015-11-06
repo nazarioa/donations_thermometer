@@ -183,6 +183,18 @@ function donations_thermometer_block_configure($delta = '') {
       "#empty_option" => t('Please Select'),
       '#description' => t('You must save after this setting has been changed.')
     );
+    $form['donations_thermometer_block-' . $block_number . '-width'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Width'),
+      '#size' => 4,
+      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-width'),
+    );
+    $form['donations_thermometer_block-' . $block_number . '-height'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Height'),
+      '#size' => 4,
+      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-height'),
+    );
     $form['donations_thermometer_block-' . $block_number . '-prefix'] = array(
       '#type' => 'textfield',
       '#title' => t('Prefix'),
