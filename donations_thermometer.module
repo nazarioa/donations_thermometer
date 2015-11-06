@@ -129,26 +129,36 @@ function donations_thermometer_block_view($delta) {
 
   if ($parts[0] == 'donations_thermometer_block'){
     $block_number = $parts[1];
-    $campaign_name = variable_get('donations_thermometer_block-' . $block_number . '-campaign_name', '');
+    $block_data = null;
 
     // Classy
     if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
-      $block['subject'] = t($campaign_name);
-      $block['content'] = theme('donations_thermometer', donations_thermometer__classy_block($block_number) );
+      $block_data = donations_thermometer__classy_block($block_number);
     }
-
     // Manual
     elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual'){
-      $block['subject'] = t($campaign_name);
-      $block['content'] = theme('donations_thermometer', donations_thermometer__manual_block($block_number) );
+      $block_data = donations_thermometer__manual_block($block_number);
     }
-
+    // Block type has not been configured
     else{
-      //Block type has not been configured
       return $block;
     }
 
-    $settings = array('block_number' => $block_number,  'orientation' =>  variable_get('donations_thermometer_block-' . $block_number . '-orientation') );
+    // Variables to TPL file
+    $block['subject'] = t($block_data['campaign_name']);
+    // Variables specific to orientation
+    if($block_data['orientation'] == 'horizontal'){
+      $block_data['inlinecss'] = 'width: ' . $block_data['percent'] . '%; ';
+    }
+    elseif($block_data['orientation'] == 'vertical'){
+      $block_data['inlinecss'] = 'height: ' . $block_data['percent'] . '%; ';
+    }
+    $block['content'] = theme('donations_thermometer', $block_data );
+
+
+    // Variables or "settings" the JS function
+    $settings = array('block_number' => $block_number,  'orientation' =>  $block_data['orientation'], 'percent' => $block_data['percent'], 'campaign_name' => $block_data['campaign_name']);
+
     $module_path = drupal_get_path('module', 'donations_thermometer');
     drupal_add_js( array('donations_thermometer' => $settings), 'setting');
     drupal_add_js($module_path .'/js/donations_thermometer.js');
@@ -209,7 +219,15 @@ function donations_thermometer_block_configure($delta = '') {
         'vertical' => t('Vertical'),
         'horizontal' => t('Horizontal')
       ),
-      "#empty_option" => t('Please Select'),
+    );
+    $form['donations_thermometer_block-' . $block_number . '-size'] = array(
+      '#type' => 'select',
+      '#title' => t('Display Orientation'),
+      '#default_value' => variable_get('donations_thermometer_block' . $block_number . '-size', 'small'),
+      '#options' => array(
+        'small' => t('Small'),
+        'large' => t('Large')
+      ),
     );
 
     // Classy.org
@@ -296,6 +314,9 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
     if(isset($edit['donations_thermometer_block-' . $block_number . '-orientation'])){
       variable_set('donations_thermometer_block-' . $block_number . '-orientation', $edit['donations_thermometer_block-' . $block_number . '-orientation']);
     }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-size'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-size', $edit['donations_thermometer_block-' . $block_number . '-size']);
+    }
     if(isset($edit['donations_thermometer_block-' . $block_number . '-postfix'])){
       variable_set('donations_thermometer_block-' . $block_number . '-postfix', $edit['donations_thermometer_block-' . $block_number . '-postfix']);
     }
@@ -333,6 +354,7 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
 * Adds validation of block configuration custom fields.
 */
 function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_state, $form_id) {
+  //TODO: I need to add vlaidation
   if ($form['module']['#value'] == 'donations_thermometer') {
     $form['#validate'][] = 'donations_thermometer_block_validate';
   }
@@ -343,6 +365,7 @@ function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_s
 * Form validation callback of block configuration.
 */
 function donations_thermometer_block_validate(&$form, $form_state) {
+  //TODO: I need to add vlaidation
   $delta = $form['delta']['#value'];
   if ($delta == 'thermometer') {
     $current = $form_state['values']['donations_thermometer_current'];
@@ -437,7 +460,7 @@ function donations_thermometer__classy_block($block_number){
 
   $percent = round(($current / $goal) * 100, 3);
 
-  return compact('block_id', 'campaign_name', 'goal', 'current', 'num_donations', 'num_donors', 'size', 'prefix', 'postfix', 'orientation', 'percent');
+  return compact('block_id', 'campaign_name', 'goal', 'current', 'prefix', 'postfix', 'size', 'orientation', 'percent', 'num_donations', 'num_donors');
 }
 
 
@@ -452,5 +475,5 @@ function donations_thermometer__manual_block($block_number){
   $orientation = variable_get('donations_thermometer_block-' . $block_number . '-orientation');
   $percent = round(($current / $goal) * 100, 3);
 
-  return compact('block_id', 'current', 'goal', 'prefix', 'postfix', 'size', 'orientation', 'percent');
+  return compact('block_id', 'campaign_name', 'goal', 'current', 'prefix', 'postfix', 'size', 'orientation', 'percent');
 }

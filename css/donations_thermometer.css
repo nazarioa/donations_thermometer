@@ -1,41 +1,95 @@
-/* Small Size */
-
-.gauge-small{
-  width: 37px;
-  height: 211px;
-  position:relative;
-  background: #333 url(../images/gauge-small.gif) top left no-repeat;
+div.gauge{
+  position: relative;
+  background-color: #cccccc;
+  -moz-border-radius: 25px;
+  -webkit-border-radius: 25px;
+  border-radius: 25px;
+  padding: 10px;
+  box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+  margin: 10px;
 }
 
-.gauge-small .current-value {
-  position:absolute;
-  left: 0px;
-  bottom: 0px;
-  text-align: center;
-  width: 100%;
-  background: red url(../images/gauge-small.gif) bottom right no-repeat;
+div.gauge > span.current-value {
+  display: block;
+  box-shadow:
+    inset 0 2px 9px  rgba(255,255,255,0.3),
+    inset 0 -2px 6px rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Large Size */
-
-.gauge-large{
-  width: 77px;
-  height: 442px;
-  position:relative;
-  background: #333 url(../images/gauge.gif) top left no-repeat;
-}
-.gauge-large .current-value{
-  position:absolute;
-  left: 0px;
-  bottom: 0px;
-  text-align: center;
-  width: 100%;
-  background: red url(../images/gauge.gif) bottom right no-repeat;
+div.gauge.vertical > span.current-value {
+  border-radius: inherit;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
 }
 
-/* General Size */
+div.gauge.horizontal > span.current-value {
+  border-radius: inherit;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
 
-.gauge-large .current-value  p,
-.gauge-small .current-value  p {
+
+/* SIZING */
+
+/* Small */
+div.gauge.vertical.small{
+  width: 20px;
+  height: 200px;
+}
+
+div.gauge.horizontal.small{
+  width: 200px;
+  height: 20px;
+}
+
+
+/* Large */
+div.gauge.vertical.large{
+  width: 80px;
+  height: 400px;
+}
+
+div.gauge.horizontal.large{
+  width: 400px;
+  height: 80px;
+}
+
+div.gauge.vertical.small > span.current-value, div.gauge.vertical.large > span.current-value {
+  width: inherit;
+  position: absolute;
+  bottom: 10px;
+}
+
+div.gauge.horizontal.small > span.current-value, div.gauge.horizontal.large > span.current-value {
+  height: inherit;
+}
+
+/* PREDEFINED COLORS */
+/* Orange */
+div.gauge.orange > span.current-value {
+  background-color: #f1a165;
+  background-image: linear-gradient(to bottom, #f1a165, #f36d0a);
+}
+
+/* Red */
+div.gauge.red > span.current-value {
+  background-color: #f0a3a3;
+  background-image: linear-gradient(to bottom, #f0a3a3, #f42323);
+}
+
+div.gauge.green > span.current-value {
+  background-color: rgb(43,194,83);
+  background-image: linear-gradient(
+    center bottom,
+    rgb(43,194,83) 37%,
+    rgb(84,240,84) 69%
+  );
+}
+
+/* OTHER */
+div.gauge span.current-value  p,
+div.gauge span.current-value  p{
   display:none;
 }
