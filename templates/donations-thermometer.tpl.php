@@ -22,7 +22,7 @@
  ?>
 
 <div id="donations_thermometer-<?php print $block_id ?>">
-  <div class="gauge <?php print $size ?> <?php print $orientation ?> red">
+  <div class="gauge <?php print $size ?> <?php print $orientation ?> <?php print $color ?>">
     <span class="current-value" style="<?php print $inlinecss ?>">
       <span><?php print $percent; ?>% </span>
     </span>

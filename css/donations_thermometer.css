@@ -14,8 +14,6 @@
 div.gauge{
   position: relative;
   background-color: #cccccc;
-  -moz-border-radius: 25px;
-  -webkit-border-radius: 25px;
   border-radius: 25px;
   padding: 10px;
   box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
@@ -88,16 +86,22 @@ div.gauge.horizontal.small > span.current-value, div.gauge.horizontal.large > sp
 }
 
 /* PREDEFINED COLORS. */
-/* Orange. */
-div.gauge.orange > span.current-value {
-  background-color: #f1a165;
-  background-image: linear-gradient(to bottom, #f1a165, #f36d0a);
-}
-
 /* Red. */
 div.gauge.red > span.current-value {
   background-color: #f0a3a3;
   background-image: linear-gradient(to bottom, #f0a3a3, #f42323);
+}
+
+/* Blue. */
+div.gauge.blue > span.current-value {
+  background-color: #a3b4f0;
+  background-image: linear-gradient(to bottom, #a3b4f0, #2370f4);
+}
+
+/* Yellow. */
+div.gauge.yellow > span.current-value {
+  background-color: #eaf0a3;
+  background-image: linear-gradient(to bottom, #eaf0a3, #ddf423);
 }
 
 /* Green. */
@@ -108,6 +112,104 @@ div.gauge.green > span.current-value {
     rgb(43,194,83) 37%,
     rgb(84,240,84) 69%
   );
+}
+
+/* Purple. */
+div.gauge.purple > span.current-value {
+  background-color: #c7a3f0;
+  background-image: linear-gradient(to bottom, #c7a3f0, #8523f4);
+}
+
+/* Orange. */
+div.gauge.orange > span.current-value {
+  background-color: #f1a165;
+  background-image: linear-gradient(to bottom, #f1a165, #f36d0a);
+}
+
+
+/* thermometer. */
+div.gauge.image {
+  background-color: #333;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+div.gauge.image > span.current-value {
+  background-color: #f0a3a3;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+div.gauge.small.vertical.image {
+  width: 37px;
+  height: 211px;
+  position:relative;
+  background: #333 url(../images/gauge-vertical-small.gif) top left no-repeat;
+}
+
+div.gauge.small.vertical.image > span.current-value {
+  background-color: #f0a3a3;
+  position:absolute;
+  left: 0px;
+  bottom: 0px;
+  text-align: center;
+  width: 100%;
+  background: red url(../images/gauge-vertical-small.gif) bottom right no-repeat;
+}
+
+div.gauge.large.vertical.image {
+  width: 77px;
+  height: 442px;
+  position:relative;
+  background: #333 url(../images/gauge-vertical-large.gif) top left no-repeat;
+}
+
+div.gauge.large.vertical.image > span.current-value {
+  background-color: #f0a3a3;
+  position:absolute;
+  left: 0px;
+  bottom: 0px;
+  text-align: center;
+  width: 100%;
+  background: red url(../images/gauge-vertical-large.gif) bottom right no-repeat;
+}
+
+div.gauge.small.horizontal.image {
+  width: 211px;
+  height: 37px;
+  position:relative;
+  background: #333 url(../images/gauge-horizontal-small.png) top left no-repeat;
+}
+
+div.gauge.small.horizontal.image > span.current-value {
+  background-color: #f0a3a3;
+  position:absolute;
+  left: 0px;
+  bottom: 0px;
+  text-align: center;
+  height: 100%;
+  background: red url(../images/gauge-horizontal-small.png) bottom left no-repeat;
+}
+
+div.gauge.large.horizontal.image {
+  width: 442px;
+  height: 77px;
+  position:relative;
+  background: #333 url(../images/gauge-horizontal-large.png) top left no-repeat;
+}
+
+div.gauge.large.horizontal.image > span.current-value {
+  background-color: #f0a3a3;
+  position:absolute;
+  left: 0px;
+  bottom: 0px;
+  text-align: center;
+  height: 100%;
+  background: red url(../images/gauge-horizontal-large.png) bottom left no-repeat;
 }
 
 /* OTHER */

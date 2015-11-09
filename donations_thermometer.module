@@ -225,11 +225,25 @@ function donations_thermometer_block_configure($delta = '') {
     );
     $form['donations_thermometer_block-' . $block_number . '-size'] = array(
       '#type' => 'select',
-      '#title' => t('Display Orientation'),
+      '#title' => t('Thermometer Size'),
       '#default_value' => variable_get('donations_thermometer_block' . $block_number . '-size', 'small'),
       '#options' => array(
         'small' => t('Small'),
         'large' => t('Large')
+      ),
+    );
+    $form['donations_thermometer_block-' . $block_number . '-color'] = array(
+      '#type' => 'select',
+      '#title' => t('Thermometer Color'),
+      '#default_value' => variable_get('donations_thermometer_block' . $block_number . '-color', 'red'),
+      '#options' => array(
+        'red' => t('Red'),
+        'blue' => t('Blue'),
+        'yellow' => t('Yellow'),
+        'green' => t('Green'),
+        'orange' => t('Orange'),
+        'purple' => t('Purple'),
+        'image' => t('Thermometer Image'),
       ),
     );
 
@@ -320,6 +334,9 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
     }
     if(isset($edit['donations_thermometer_block-' . $block_number . '-size'])){
       variable_set('donations_thermometer_block-' . $block_number . '-size', $edit['donations_thermometer_block-' . $block_number . '-size']);
+    }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-color'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-color', $edit['donations_thermometer_block-' . $block_number . '-color']);
     }
     if(isset($edit['donations_thermometer_block-' . $block_number . '-postfix'])){
       variable_set('donations_thermometer_block-' . $block_number . '-postfix', $edit['donations_thermometer_block-' . $block_number . '-postfix']);
@@ -428,6 +445,7 @@ function donations_thermometer__classy_block($block_number){
   $postfix = variable_get('donations_thermometer_block-' . $block_number . '-postfix');
   $prefix = variable_get('donations_thermometer_block-' . $block_number . '-prefix');
   $size = variable_get('donations_thermometer_block-' . $block_number . '-size');
+  $color = variable_get('donations_thermometer_block-' . $block_number . '-color');
   $orientation = variable_get('donations_thermometer_block-' . $block_number . '-orientation');
 
   $update_frequency = variable_get('donations_thermometer_block-' . $block_number . '-update_frequency', 30);
@@ -464,7 +482,7 @@ function donations_thermometer__classy_block($block_number){
 
   $percent = round(($current / $goal) * 100, 3);
 
-  return compact('block_id', 'campaign_name', 'goal', 'current', 'prefix', 'postfix', 'size', 'orientation', 'percent', 'num_donations', 'num_donors');
+  return compact('block_id', 'campaign_name', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent', 'num_donations', 'num_donors');
 }
 
 
@@ -476,8 +494,9 @@ function donations_thermometer__manual_block($block_number){
   $postfix = variable_get('donations_thermometer_block-' . $block_number . '-postfix');
   $prefix = variable_get('donations_thermometer_block-' . $block_number . '-prefix');
   $size = variable_get('donations_thermometer_block-' . $block_number . '-size');
+  $color = variable_get('donations_thermometer_block-' . $block_number . '-color');
   $orientation = variable_get('donations_thermometer_block-' . $block_number . '-orientation');
   $percent = round(($current / $goal) * 100, 3);
 
-  return compact('block_id', 'campaign_name', 'goal', 'current', 'prefix', 'postfix', 'size', 'orientation', 'percent');
+  return compact('block_id', 'campaign_name', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent');
 }
