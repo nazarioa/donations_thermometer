@@ -1,7 +1,7 @@
 <div id="donations_thermometer-<?php print $block_id ?>">
   <div class="gauge <?php print $size ?> <?php print $orientation ?> red">
     <span class="current-value" style="<?php print $inlinecss ?>">
-      <!-- <p><?php print $percent; ?>% </p> -->
+      <span><?php print $percent; ?>% </span>
     </span>
   </div>
   <p>

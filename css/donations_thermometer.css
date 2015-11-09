@@ -106,7 +106,6 @@ div.gauge.green > span.current-value {
 }
 
 /* OTHER */
-div.gauge span.current-value  p,
-div.gauge span.current-value  p{
+div.gauge span.current-value > span{
   display:none;
 }
