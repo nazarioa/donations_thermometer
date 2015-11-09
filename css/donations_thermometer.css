@@ -1,3 +1,8 @@
+/**
+ * @file
+ * This CSS3 file provides basic styling & animation for the thermometer.
+ */
+
 @keyframes thermometer_raise_width {
     from {width: 0%;}
 }

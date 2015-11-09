@@ -1,13 +1,12 @@
 <?php
+/**
+ * @file
+ * Allows creation of a progress bar block to visually show donations amount.
+ */
 
 /**
-* @file
-* Allows creation of a progress bar block to visually show amount of donations etc
-*/
-
-/**
-* Implements hook_permission().
-*/
+ * Implements hook_permission().
+ */
 function donations_thermometer_permission() {
   return array('administer donations thermometer' => array(
     'title' => t('Adminster Donations Thermometer'),
@@ -16,12 +15,12 @@ function donations_thermometer_permission() {
 
 
 /**
-* Imeplements hook_menu().
-*/
+ * Imeplements hook_menu().
+ */
 function donations_thermometer_menu(){
   $items = array();
 
-  // Admin Configuration Group
+  // Admin Configuration Group.
   // When an admin has logged in -- this creates a group
   // under the configuration page.
   $items['admin/config/donations_thermometer'] = array(
@@ -30,7 +29,7 @@ function donations_thermometer_menu(){
     'access arguments' => array('admin donations_thermometer settings'),
   );
 
-  // Admin configuration - Settings
+  // Admin configuration - Settings.
   // Adds a link under the Admin Configuration Group
   // mentioned in the above block.
   $items['admin/config/donations_thermometer/manage'] = array(
@@ -59,7 +58,7 @@ function donations_thermometer_admin_settings_form($node, &$form_state) {
   // );
 
 
-  // GENERAL //
+  // GENERAL.
   $form['general'] = array(
     '#title' => t('General Settings'),
     '#description' => t('General Settings. Individual meter settings can be found in the blocks for the resepctive item.'),
@@ -79,8 +78,8 @@ function donations_thermometer_admin_settings_form($node, &$form_state) {
 
 
 /**
-* Implementation of hook_theme().
-*/
+ * Implementation of hook_theme().
+ */
 function donations_thermometer_theme($existing, $type, $theme, $path) {
   $items = array();
 
@@ -95,11 +94,12 @@ function donations_thermometer_theme($existing, $type, $theme, $path) {
 
 
 /**
-* Implements hook_block_info().
-*
-* Define all blocks provided by the module.
-* This hook declares to Drupal what blocks are provided by your module and can optionally specify initial block configuration settings.
-*/
+ * Implements hook_block_info().
+ *
+ * Define all blocks provided by the module.
+ * This hook declares to Drupal what blocks are provided by your module and
+ * can optionally specify initial block configuration settings.
+ */
 function donations_thermometer_block_info() {
   $number_of_blocks = variable_get('donations_thermometer_number_of_meters', 1);
   $block_number = 1;
@@ -121,8 +121,8 @@ function donations_thermometer_block_info() {
 
 
 /**
-* Implements hook_block_view().
-*/
+ * Implements hook_block_view().
+ */
 function donations_thermometer_block_view($delta) {
   $block = array();
   $parts = explode('-', $delta);
@@ -131,22 +131,25 @@ function donations_thermometer_block_view($delta) {
     $block_number = $parts[1];
     $block_data = null;
 
-    // Classy
+    // Classy.
     if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
       $block_data = donations_thermometer__classy_block($block_number);
     }
-    // Manual
+
+    // Manual.
     elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual'){
       $block_data = donations_thermometer__manual_block($block_number);
     }
-    // Block type has not been configured
+
+    // Block type has not been configured.
     else{
       return $block;
     }
 
-    // Variables to TPL file
+    // Variables to TPL file.
     $block['subject'] = t($block_data['campaign_name']);
-    // Variables specific to orientation
+
+    // Variables specific to orientation.
     if($block_data['orientation'] == 'horizontal'){
       $block_data['inlinecss'] = 'width: ' . $block_data['percent'] . '%; ';
     }
@@ -169,8 +172,8 @@ function donations_thermometer_block_view($delta) {
 
 
 /**
-* Implements hook_block_configure().
-*/
+ * Implements hook_block_configure().
+ */
 function donations_thermometer_block_configure($delta = '') {
   $form = array();
   $parts = explode('-', $delta);
@@ -230,7 +233,7 @@ function donations_thermometer_block_configure($delta = '') {
       ),
     );
 
-    // Classy.org
+    // Classy.org.
     // TODO: API VERSION
     if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
       $form['donations_thermometer_block-' . $block_number . '-classy_token'] = array(
@@ -269,7 +272,8 @@ function donations_thermometer_block_configure($delta = '') {
         '#description' => t("How often should new data be gathered from Classy.org")
       );
     }
-    // Manual
+
+    // Manual.
     elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual'){
       $form['donations_thermometer_block-' . $block_number . '-goal'] = array(
         '#type' => 'textfield',
@@ -409,7 +413,7 @@ function donations_thermometer_init() {
 /* ************* */
 
 /**
-* MODULE SPECIFC FUNCTIONS
+* MODULE SPECIFC FUNCTIONS.
 */
 function donations_thermometer__classy_block($block_number){
   $block_id = $block_number;
@@ -455,7 +459,7 @@ function donations_thermometer__classy_block($block_number){
       $num_donors = $data->num_donors;
       variable_set('donations_thermometer_block-' . $block_number . '-num_donors', $num_donors);
     }
-    //else: there was an error so we will fall back on old data
+    // else: there was an error so we will fall back on old data.
   }
 
   $percent = round(($current / $goal) * 100, 3);
