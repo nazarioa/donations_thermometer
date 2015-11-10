@@ -1,3 +1,11 @@
+@keyframes thermometer_raise_width {
+    from {width: 0%;}
+}
+
+@keyframes thermometer_raise_height {
+    from {height: 0%;}
+}
+
 div.gauge{
   position: relative;
   background-color: #cccccc;
@@ -31,9 +39,9 @@ div.gauge.horizontal > span.current-value {
 }
 
 
-/* SIZING */
+/* SIZING. */
 
-/* Small */
+/* Small. */
 div.gauge.vertical.small{
   width: 20px;
   height: 200px;
@@ -45,7 +53,7 @@ div.gauge.horizontal.small{
 }
 
 
-/* Large */
+/* Large. */
 div.gauge.vertical.large{
   width: 80px;
   height: 400px;
@@ -60,25 +68,34 @@ div.gauge.vertical.small > span.current-value, div.gauge.vertical.large > span.c
   width: inherit;
   position: absolute;
   bottom: 10px;
+  min-height: 4px;
+  animation-name: thermometer_raise_height;
+  animation-duration: 4s;
+  animation-delay: 2s;
 }
 
 div.gauge.horizontal.small > span.current-value, div.gauge.horizontal.large > span.current-value {
   height: inherit;
+  min-width: 4px;
+  animation-name: thermometer_raise_width;
+  animation-duration: 4s;
+  animation-delay: 2s;
 }
 
-/* PREDEFINED COLORS */
-/* Orange */
+/* PREDEFINED COLORS. */
+/* Orange. */
 div.gauge.orange > span.current-value {
   background-color: #f1a165;
   background-image: linear-gradient(to bottom, #f1a165, #f36d0a);
 }
 
-/* Red */
+/* Red. */
 div.gauge.red > span.current-value {
   background-color: #f0a3a3;
   background-image: linear-gradient(to bottom, #f0a3a3, #f42323);
 }
 
+/* Green. */
 div.gauge.green > span.current-value {
   background-color: rgb(43,194,83);
   background-image: linear-gradient(

@@ -155,13 +155,13 @@ function donations_thermometer_block_view($delta) {
     }
     $block['content'] = theme('donations_thermometer', $block_data );
 
-
-    // Variables or "settings" the JS function
-    $settings = array('block_number' => $block_number,  'orientation' =>  $block_data['orientation'], 'percent' => $block_data['percent'], 'campaign_name' => $block_data['campaign_name']);
-
-    $module_path = drupal_get_path('module', 'donations_thermometer');
-    drupal_add_js( array('donations_thermometer' => $settings), 'setting');
-    drupal_add_js($module_path .'/js/donations_thermometer.js');
+    // Variables or "settings" the JS function.
+    $settings = array(
+      'block_number' => $block_number,
+      'orientation' =>  $block_data['orientation'],
+      'percent' => $block_data['percent'],
+      'campaign_name' => $block_data['campaign_name'],
+    );
   }
 
   return $block;
