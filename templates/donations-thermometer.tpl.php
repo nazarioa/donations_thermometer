@@ -27,12 +27,12 @@
       <span class="current-value"><?php print $percent; ?>% </span>
     </span>
   </div>
-  <p class="current">
+  <p class="donations_thermometer-current">
     <label><?php print t('Current:'); ?></label>
-    <span class="donations_thermometer-amount"><?php print $prefix; ?><?php print $current; ?><?php print $postfix; ?></span>
+    <span><?php print $prefix; ?><?php print $current; ?><?php print $postfix; ?></span>
   </p>
-  <p class="goal">
+  <p class="donations_thermometer-goal">
     <label><?php print t('Goal:'); ?></label>
-    <span class="donations_thermometer-amount"><?php print $prefix; ?><?php print $goal; ?><?php print $postfix; ?></span>
+    <span><?php print $prefix; ?><?php print $goal; ?><?php print $postfix; ?></span>
   </p>
 </div>
