@@ -213,6 +213,9 @@ div.gauge.large.horizontal.image > span.current-meter {
 }
 
 /* OTHER */
-div.gauge span.current-meter > span.current-value{
+div.gauge > span.current-value{
   display:none;
+  position: absolute;
+  left: 10px;
+  z-index: 10;
 }
