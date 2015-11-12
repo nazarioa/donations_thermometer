@@ -71,7 +71,6 @@ div.gauge.vertical.small > span.current-meter, div.gauge.vertical.large > span.c
   width: inherit;
   position: absolute;
   bottom: 10px;
-  min-height: 4px;
   animation-name: thermometer_raise_height;
   animation-duration: 4s;
   animation-delay: 2s;
@@ -79,7 +78,6 @@ div.gauge.vertical.small > span.current-meter, div.gauge.vertical.large > span.c
 
 div.gauge.horizontal.small > span.current-meter, div.gauge.horizontal.large > span.current-meter {
   height: inherit;
-  min-width: 4px;
   animation-name: thermometer_raise_width;
   animation-duration: 4s;
   animation-delay: 2s;
