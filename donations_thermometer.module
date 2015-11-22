@@ -198,6 +198,18 @@ function donations_thermometer_block_configure($delta = '') {
       "#empty_option" => t('Please Select'),
       '#description' => t('You must save after this setting has been changed.')
     );
+    $form['donations_thermometer_block-' . $block_number . '-roundto'] = array(
+      '#type' => 'select',
+      '#title' => t('Round Values To'),
+      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-roundto', 1),
+      '#options' => array(
+        0 => t('Ones (2.5 -> 3%)'),
+        1 => t('Tenths (2.25 -> 2.3%)'),
+        2 => t('Hundreds (2.225 -> 2.23%)'),
+        3 => t('Thousands (2.2225 -> 2.223%)')
+      ),
+      '#description' => t('How should the current amount and goal amount values be rounded when displayed?')
+    );
     $form['donations_thermometer_block-' . $block_number . '-prefix'] = array(
       '#type' => 'textfield',
       '#title' => t('Prefix'),
@@ -327,6 +339,9 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
   if($parts[0] == 'donations_thermometer_block'){
     if(isset($edit['donations_thermometer_block-' . $block_number . '-type'])){
       variable_set('donations_thermometer_block-' . $block_number . '-type', $edit['donations_thermometer_block-' . $block_number . '-type']);
+    }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-roundto'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-roundto', $edit['donations_thermometer_block-' . $block_number . '-roundto']);
     }
     if(isset($edit['donations_thermometer_block-' . $block_number . '-description'])){
       variable_set('donations_thermometer_block-' . $block_number . '-description', $edit['donations_thermometer_block-' . $block_number . '-description']);
@@ -503,7 +518,7 @@ function donations_thermometer__manual_block($block_number){
   $size = variable_get('donations_thermometer_block-' . $block_number . '-size');
   $color = variable_get('donations_thermometer_block-' . $block_number . '-color');
   $orientation = variable_get('donations_thermometer_block-' . $block_number . '-orientation');
-  $percent = round(($current / $goal) * 100, 3);
+  $percent = round(($current / $goal) * 100, variable_get('donations_thermometer_block-' . $block_number . '-roundto', 1));
 
   return compact('block_id', 'description', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent');
 }
