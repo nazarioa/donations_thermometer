@@ -196,7 +196,7 @@ function donations_thermometer_block_configure($delta = '') {
         'classy' => t('Classy.org')
       ),
       "#empty_option" => t('Please Select'),
-      '#description' => t('You must save after this setting has been changed.')
+      '#description' => t('You must save after this setting has been changed.'),
     );
     $form['donations_thermometer_block-' . $block_number . '-roundto'] = array(
       '#type' => 'select',
@@ -216,7 +216,7 @@ function donations_thermometer_block_configure($delta = '') {
       '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-prefix', ''),
       '#size' => 9,
       '#maxlength' => 10,
-      '#description' => t("A prefix."),
+      '#description' => t("A prefix for goal and current values."),
       '#required' => FALSE,
     );
     $form['donations_thermometer_block-' . $block_number . '-postfix'] = array(
@@ -225,7 +225,7 @@ function donations_thermometer_block_configure($delta = '') {
       '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-postfix', ''),
       '#size' => 9,
       '#maxlength' => 10,
-      '#description' => t("A postfix."),
+      '#description' => t("A postfix for goal and current values."),
       '#required' => FALSE,
     );
     $form['donations_thermometer_block-' . $block_number . '-orientation'] = array(
@@ -309,7 +309,7 @@ function donations_thermometer_block_configure($delta = '') {
         '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-goal', 100),
         '#size' => 9,
         '#maxlength' => 10,
-        '#description' => t("The Goal amount of the thermometer"),
+        '#description' => t("The Goal amount of the thermometer. Once set, this normally does not change."),
         '#required' => TRUE,
       );
       $form['donations_thermometer_block-' . $block_number . '-current'] = array(
@@ -318,7 +318,7 @@ function donations_thermometer_block_configure($delta = '') {
         '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-current', 50),
         '#size' => 9,
         '#maxlength' => 10,
-        '#description' => t("The current progress amount"),
+        '#description' => t("The current progress amount. This is the value that must be manually adjusted."),
         '#required' => TRUE,
       );
     }
