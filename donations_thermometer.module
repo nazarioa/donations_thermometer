@@ -48,15 +48,7 @@ function donations_thermometer_menu(){
 * Implements hook_form().
 */
 function donations_thermometer_admin_settings_form($node, &$form_state) {
-  //TODO: needs valdiation. Must be a number greater than 0
   $form = array();
-
-  // $form['overview'] = array(
-  //   '#markup' => t('This interface allows administrators to manage settings for the Agegate.'),
-  //   '#prefix' => '<p>',
-  //   '#suffix' => '</p>'
-  // );
-
 
   // GENERAL.
   $form['general'] = array(
@@ -223,7 +215,6 @@ function donations_thermometer_block_configure($delta = '') {
     );
 
     // Classy.org.
-    // TODO: API VERSION
     if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
       $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-classy_token'] = array(
         '#type' => 'textfield',
@@ -462,7 +453,6 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
 * Adds validation of block configuration custom fields.
 */
 function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_state, $form_id) {
-  //TODO: I need to add vlaidation
   if ($form['module']['#value'] == 'donations_thermometer') {
     $form['#validate'][] = 'donations_thermometer_block_validate';
   }
@@ -473,7 +463,6 @@ function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_s
 * Form validation callback of block configuration.
 */
 function donations_thermometer_block_validate(&$form, $form_state) {
-  //TODO: I need to add vlaidation
   $delta = $form['module']['#value'];
 
   if ($delta == 'donations_thermometer') {
