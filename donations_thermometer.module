@@ -205,7 +205,7 @@ function donations_thermometer_block_configure($delta = '') {
     );
     // Type specifc
     $form['thermometer_type_specifc_settings'] = array(
-      '#title' => t('Thermometer Type Settings'),
+      '#title' => t('Type Specific Settings'),
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
     );
