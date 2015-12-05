@@ -9,12 +9,13 @@
  * - $orientation (string): Orientation of the the thermometer used in CSS:
  * 'vertical', 'horizontal'
  * - $inlinecss (string): CSS that contins the size of the thermometer.
- * - $percent (double): percentage of the thermometer.
+ * - $percent (double): Percentage of the thermometer.
  * - $goal (double): Thermometer goal.
  * - $current (double): Current thermometer value.
  * - $prefix (string): Prefix to 'Current' and 'Goal'.
  * - $postfix (string): Prefix to 'Current' and 'Goal'.
- * - $url_enabled (bool): Should a url be
+ * - $url_enabled (bool): Is the URL enabled.
+ * - $url (string): URL.
  *
  * @see template_preprocess_forum_list()
  *
