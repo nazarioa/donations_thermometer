@@ -182,6 +182,7 @@ function donations_thermometer_block_configure($delta = '') {
   $form = array();
   $parts = explode('-', $delta);
   $block_number = $parts[1];
+  $type = variable_get('donations_thermometer_block-' . $block_number . '-type');
 
   if ($parts[0] == 'donations_thermometer_block') {
     $form['general'] = array(
@@ -207,173 +208,176 @@ function donations_thermometer_block_configure($delta = '') {
       "#empty_option" => t('Please Select'),
       '#description' => t('If the type is changed, you must click save in order to see additional settings.'),
     );
-    // Type specifc
-    $form['thermometer_type_specifc_settings'] = array(
-      '#title' => t('Type Specific Settings'),
-      '#type' => 'fieldset',
-      '#collapsible' => TRUE,
-    );
 
-    // Classy.org.
-    if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
-      $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-classy_token'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Classy Token'),
-        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_token'),
-        '#description' => t("API Access Token"),
-        '#required' => TRUE,
+    if(!empty($type)) {
+      // Type specifc
+      $form['thermometer_type_specifc_settings'] = array(
+        '#title' => t('Type Specific Settings'),
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
       );
-      $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-classy_cid'] = array(
-        '#type' => 'textfield',
-        '#title' => t('CID Number'),
-        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_cid'),
-        '#description' => t("Classy Merchant ID"),
-        '#required' => TRUE,
+
+      // Classy.org.
+      if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
+        $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-classy_token'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Classy Token'),
+          '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_token'),
+          '#description' => t("API Access Token"),
+          '#required' => TRUE,
+        );
+        $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-classy_cid'] = array(
+          '#type' => 'textfield',
+          '#title' => t('CID Number'),
+          '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_cid'),
+          '#description' => t("Classy Merchant ID"),
+          '#required' => TRUE,
+        );
+        $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-classy_eid'] = array(
+          '#type' => 'textfield',
+          '#title' => t('EID Number'),
+          '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_eid'),
+          '#description' => t("Classy Campaign ID"),
+          '#required' => TRUE,
+        );
+        $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-update_frequency'] = array(
+          '#type' => 'select',
+          '#title' => t('Data Update Frequency'),
+          '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-update_frequency', 30),
+          '#options' => array(
+            5 => t('5 Minutes'),
+            10 => t('10 Minutes'),
+            30 => t('30 Minutes'),
+            60 => t('1 Hour'),
+            1440 => t('24 Hours'),
+          ),
+          "#empty_option" => t('Please Select'),
+          '#description' => t("How often should new data be gathered from Classy.org. It is highly advised that this be left at the default 30 minutes especially for donation thermometers who's data does not change frequently.")
+        );
+      }
+
+      // Manual.
+      elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual'){
+        $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-goal'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Goal'),
+          '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-goal', 100),
+          '#size' => 9,
+          '#maxlength' => 10,
+          '#description' => t("The Goal amount of the thermometer. Once set, this normally does not change."),
+          '#required' => TRUE,
+        );
+        $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-current'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Current number'),
+          '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-current', 50),
+          '#size' => 9,
+          '#maxlength' => 10,
+          '#description' => t("The current progress amount. This is the value that must be manually adjusted."),
+          '#required' => TRUE,
+        );
+      }
+
+      // Value Representations
+      $form['value_representation'] = array(
+        '#title' => t('Value Representations'),
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
       );
-      $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-classy_eid'] = array(
-        '#type' => 'textfield',
-        '#title' => t('EID Number'),
-        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-classy_eid'),
-        '#description' => t("Classy Campaign ID"),
-        '#required' => TRUE,
-      );
-      $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-update_frequency'] = array(
+      $form['value_representation']['donations_thermometer_block-' . $block_number . '-roundto'] = array(
         '#type' => 'select',
-        '#title' => t('Data Update Frequency'),
-        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-update_frequency', 30),
+        '#title' => t('Round Values To'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-roundto', 1),
         '#options' => array(
-          5 => t('5 Minutes'),
-          10 => t('10 Minutes'),
-          30 => t('30 Minutes'),
-          60 => t('1 Hour'),
-          1440 => t('24 Hours'),
+          0 => t('Ones (2.5 -> 3%)'),
+          1 => t('Tenths (2.25 -> 2.3%)'),
+          2 => t('Hundreds (2.225 -> 2.23%)'),
+          3 => t('Thousands (2.2225 -> 2.223%)')
         ),
-        "#empty_option" => t('Please Select'),
-        '#description' => t("How often should new data be gathered from Classy.org. It is highly advised that this be left at the default 30 minutes especially for donation thermometers who's data does not change frequently.")
+        '#description' => t('How should the current amount and goal amount values be rounded when displayed?')
       );
-    }
-
-    // Manual.
-    elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual'){
-      $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-goal'] = array(
+      $form['value_representation']['donations_thermometer_block-' . $block_number . '-prefix'] = array(
         '#type' => 'textfield',
-        '#title' => t('Goal'),
-        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-goal', 100),
+        '#title' => t('Prefix'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-prefix', ''),
         '#size' => 9,
         '#maxlength' => 10,
-        '#description' => t("The Goal amount of the thermometer. Once set, this normally does not change."),
-        '#required' => TRUE,
+        '#description' => t("A prefix for goal and current values."),
+        '#required' => FALSE,
       );
-      $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-current'] = array(
+      $form['value_representation']['donations_thermometer_block-' . $block_number . '-postfix'] = array(
         '#type' => 'textfield',
-        '#title' => t('Current number'),
-        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-current', 50),
+        '#title' => t('Postfix'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-postfix', ''),
         '#size' => 9,
         '#maxlength' => 10,
-        '#description' => t("The current progress amount. This is the value that must be manually adjusted."),
-        '#required' => TRUE,
+        '#description' => t("A postfix for goal and current values."),
+        '#required' => FALSE,
+      );
+
+      // Donation Thermometer Styling
+      $form['thermometer_styling'] = array(
+        '#title' => t('Donation Thermometer Styling'),
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+      $form['thermometer_styling']['donations_thermometer_block-' . $block_number . '-orientation'] = array(
+        '#type' => 'select',
+        '#title' => t('Display Orientation'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-orientation', 'vertical'),
+        '#options' => array(
+          'vertical' => t('Vertical'),
+          'horizontal' => t('Horizontal')
+        ),
+      );
+      $form['thermometer_styling']['donations_thermometer_block-' . $block_number . '-size'] = array(
+        '#type' => 'select',
+        '#title' => t('Thermometer Size'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-size', 'small'),
+        '#options' => array(
+          'small' => t('Small'),
+          'large' => t('Large')
+        ),
+        '#description' => t("The dimensions of these \"small\" and \"large\" are defined in the CSS for this module. If you are crafty, you can override these values in CSS to fit your needs."),
+      );
+      $form['thermometer_styling']['donations_thermometer_block-' . $block_number . '-color'] = array(
+        '#type' => 'select',
+        '#title' => t('Thermometer Color'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-color', 'red'),
+        '#options' => array(
+          'red' => t('Red'),
+          'blue' => t('Blue'),
+          'yellow' => t('Yellow'),
+          'green' => t('Green'),
+          'orange' => t('Orange'),
+          'purple' => t('Purple'),
+          'image' => t('Thermometer Image'),
+        ),
+        '#description' => t("This too can be overridden in CSS."),
+      );
+
+      // Engagement URL
+      $form['engagement_url'] = array(
+        '#title' => t('Engagement URL'),
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+      $form['engagement_url']['donations_thermometer_block-' . $block_number . '-url_enabled'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Enable Engagement URL'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-url_enabled', 0),
+        '#description' => t("If the visitor clicks on this Donation Thermometer, where should they be sent."),
+      );
+      $form['engagement_url']['donations_thermometer_block-' . $block_number . '-url'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Engagement URL'),
+        '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-url', ''),
+        '#description' => t("If the visitor clicks on this Donation Thermometer, where should they be sent."),
       );
     }
-
-    // Value Representations
-    $form['value_representation'] = array(
-      '#title' => t('Value Representations'),
-      '#type' => 'fieldset',
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-    );
-    $form['value_representation']['donations_thermometer_block-' . $block_number . '-roundto'] = array(
-      '#type' => 'select',
-      '#title' => t('Round Values To'),
-      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-roundto', 1),
-      '#options' => array(
-        0 => t('Ones (2.5 -> 3%)'),
-        1 => t('Tenths (2.25 -> 2.3%)'),
-        2 => t('Hundreds (2.225 -> 2.23%)'),
-        3 => t('Thousands (2.2225 -> 2.223%)')
-      ),
-      '#description' => t('How should the current amount and goal amount values be rounded when displayed?')
-    );
-    $form['value_representation']['donations_thermometer_block-' . $block_number . '-prefix'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Prefix'),
-      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-prefix', ''),
-      '#size' => 9,
-      '#maxlength' => 10,
-      '#description' => t("A prefix for goal and current values."),
-      '#required' => FALSE,
-    );
-    $form['value_representation']['donations_thermometer_block-' . $block_number . '-postfix'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Postfix'),
-      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-postfix', ''),
-      '#size' => 9,
-      '#maxlength' => 10,
-      '#description' => t("A postfix for goal and current values."),
-      '#required' => FALSE,
-    );
-
-    // Donation Thermometer Styling
-    $form['thermometer_styling'] = array(
-      '#title' => t('Donation Thermometer Styling'),
-      '#type' => 'fieldset',
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-    );
-    $form['thermometer_styling']['donations_thermometer_block-' . $block_number . '-orientation'] = array(
-      '#type' => 'select',
-      '#title' => t('Display Orientation'),
-      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-orientation', 'vertical'),
-      '#options' => array(
-        'vertical' => t('Vertical'),
-        'horizontal' => t('Horizontal')
-      ),
-    );
-    $form['thermometer_styling']['donations_thermometer_block-' . $block_number . '-size'] = array(
-      '#type' => 'select',
-      '#title' => t('Thermometer Size'),
-      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-size', 'small'),
-      '#options' => array(
-        'small' => t('Small'),
-        'large' => t('Large')
-      ),
-      '#description' => t("The dimensions of these \"small\" and \"large\" are defined in the CSS for this module. If you are crafty, you can override these values in CSS to fit your needs."),
-    );
-    $form['thermometer_styling']['donations_thermometer_block-' . $block_number . '-color'] = array(
-      '#type' => 'select',
-      '#title' => t('Thermometer Color'),
-      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-color', 'red'),
-      '#options' => array(
-        'red' => t('Red'),
-        'blue' => t('Blue'),
-        'yellow' => t('Yellow'),
-        'green' => t('Green'),
-        'orange' => t('Orange'),
-        'purple' => t('Purple'),
-        'image' => t('Thermometer Image'),
-      ),
-      '#description' => t("This too can be overridden in CSS."),
-    );
-
-    // Engagement URL
-    $form['engagement_url'] = array(
-      '#title' => t('Engagement URL'),
-      '#type' => 'fieldset',
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-    );
-    $form['engagement_url']['donations_thermometer_block-' . $block_number . '-url_enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Enable Engagement URL'),
-      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-url_enabled', 0),
-      '#description' => t("If the visitor clicks on this Donation Thermometer, where should they be sent."),
-    );
-    $form['engagement_url']['donations_thermometer_block-' . $block_number . '-url'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Engagement URL'),
-      '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-url', ''),
-      '#description' => t("If the visitor clicks on this Donation Thermometer, where should they be sent."),
-    );
   }
 
   return $form;
