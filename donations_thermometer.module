@@ -78,6 +78,18 @@ function donations_thermometer_admin_settings_form($node, &$form_state) {
 
 
 /**
+ * Implements hook_form_validate().
+ */
+function donations_thermometer_admin_settings_form_validate($form, &$form_state) {
+  $number_of_meters = $form_state['values']['donations_thermometer_number_of_meters'];
+  $grep = '/^[0-9]+$/';
+  if (preg_match($grep, $number_of_meters) == FALSE && $number_of_meters > 0) {
+    form_set_error('donations_thermometer_number_of_meters', t('Must be an integer bigger than zero.'));
+  }
+}
+
+
+/**
  * Implementation of hook_theme().
  */
 function donations_thermometer_theme($existing, $type, $theme, $path) {
