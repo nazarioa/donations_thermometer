@@ -506,7 +506,7 @@ function donations_thermometer_init() {
 */
 function donations_thermometer__classy_block($block_number){
   $block_id = $block_number;
-  $block_description = variable_get('donations_thermometer_block-' . $block_number . '-description');
+  $description = variable_get('donations_thermometer_block-' . $block_number . '-description');
   $goal = variable_get('donations_thermometer_block-' . $block_number . '-goal', 1);
   $current = variable_get('donations_thermometer_block-' . $block_number . '-current', 0);
   $token = variable_get('donations_thermometer_block-' . $block_number . '-classy_token');
@@ -560,7 +560,7 @@ function donations_thermometer__classy_block($block_number){
 
 function donations_thermometer__manual_block($block_number){
   $block_id = $block_number;
-  $block_description = variable_get('donations_thermometer_block-' . $block_number . '-description');
+  $description = variable_get('donations_thermometer_block-' . $block_number . '-description');
   $goal = variable_get('donations_thermometer_block-' . $block_number . '-goal');
   $current = variable_get('donations_thermometer_block-' . $block_number . '-current');
   $postfix = variable_get('donations_thermometer_block-' . $block_number . '-postfix');
