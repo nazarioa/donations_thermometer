@@ -17,7 +17,7 @@ function donations_thermometer_permission() {
 /**
  * Imeplements hook_menu().
  */
-function donations_thermometer_menu(){
+function donations_thermometer_menu() {
   $items = array();
 
   // Admin Configuration Group.
@@ -79,7 +79,7 @@ function donations_thermometer_admin_settings_form_validate($form, &$form_state)
   if (preg_match($grep, $new_number_of_meters) == FALSE && $new_number_of_meters <= 0) {
     form_set_error('donations_thermometer_number_of_meters', t('Must be an integer bigger than zero.'));
   }
-  elseif($old_number_of_meters > $new_number_of_meters){
+  elseif($old_number_of_meters > $new_number_of_meters) {
     // Remove data for old donation thermometers.
     for ($i = $old_number_of_meters; $i > $new_number_of_meters ; $i--) {
       donations_thermometer__remove_block_data($i);
@@ -116,7 +116,7 @@ function donations_thermometer_block_info() {
 
   while ($block_number <= $number_of_blocks) {
     $block_description = '';
-    if( !empty(variable_get('donations_thermometer_block-' . $block_number . '-description')) ){
+    if( !empty(variable_get('donations_thermometer_block-' . $block_number . '-description')) ) {
       $block_description = variable_get('donations_thermometer_block-' . $block_number . '-description');
     }
 
@@ -137,17 +137,17 @@ function donations_thermometer_block_view($delta) {
   $block = array();
   $parts = explode('-', $delta);
 
-  if ($parts[0] == 'donations_thermometer_block'){
+  if ($parts[0] == 'donations_thermometer_block') {
     $block_number = $parts[1];
     $block_data = null;
 
     // Classy.
-    if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
+    if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy') {
       $block_data = donations_thermometer__classy_block($block_number);
     }
 
     // Manual.
-    elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual'){
+    elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual') {
       $block_data = donations_thermometer__manual_block($block_number);
     }
 
@@ -160,10 +160,10 @@ function donations_thermometer_block_view($delta) {
     $block['subject'] = t($block_data['description']);
 
     // Variables specific to orientation.
-    if($block_data['orientation'] == 'horizontal'){
+    if($block_data['orientation'] == 'horizontal') {
       $block_data['inlinecss'] = 'width: ' . $block_data['percent'] . '%; ';
     }
-    elseif($block_data['orientation'] == 'vertical'){
+    elseif($block_data['orientation'] == 'vertical') {
       $block_data['inlinecss'] = 'height: ' . $block_data['percent'] . '%; ';
     }
     $block['content'] = theme('donations_thermometer', $block_data );
@@ -224,7 +224,7 @@ function donations_thermometer_block_configure($delta = '') {
       );
 
       // Classy.org.
-      if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy'){
+      if( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'classy') {
         $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-classy_token'] = array(
           '#type' => 'textfield',
           '#title' => t('Classy Token'),
@@ -263,7 +263,7 @@ function donations_thermometer_block_configure($delta = '') {
       }
 
       // Manual.
-      elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual'){
+      elseif( variable_get('donations_thermometer_block-' . $block_number . '-type') == 'manual') {
         $form['thermometer_type_specifc_settings']['donations_thermometer_block-' . $block_number . '-goal'] = array(
           '#type' => 'textfield',
           '#title' => t('Goal'),
@@ -398,59 +398,59 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
   $block_number = $parts[1];
   $type = $edit['donations_thermometer_block-' . $block_number . '-type'];
 
-  if($parts[0] == 'donations_thermometer_block'){
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-type'])){
+  if($parts[0] == 'donations_thermometer_block') {
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-type'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-type', $edit['donations_thermometer_block-' . $block_number . '-type']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-roundto'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-roundto'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-roundto', $edit['donations_thermometer_block-' . $block_number . '-roundto']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-description'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-description'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-description', $edit['donations_thermometer_block-' . $block_number . '-description']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-orientation'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-orientation'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-orientation', $edit['donations_thermometer_block-' . $block_number . '-orientation']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-size'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-size'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-size', $edit['donations_thermometer_block-' . $block_number . '-size']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-color'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-color'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-color', $edit['donations_thermometer_block-' . $block_number . '-color']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-postfix'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-postfix'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-postfix', $edit['donations_thermometer_block-' . $block_number . '-postfix']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-prefix'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-prefix'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-prefix', $edit['donations_thermometer_block-' . $block_number . '-prefix']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-url'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-url'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-url', $edit['donations_thermometer_block-' . $block_number . '-url']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-url_enabled'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-url_enabled'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-url_enabled', $edit['donations_thermometer_block-' . $block_number . '-url_enabled']);
     }
   }
 
-  if($type == 'classy' && $parts[0] == 'donations_thermometer_block'){
+  if($type == 'classy' && $parts[0] == 'donations_thermometer_block') {
 
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-classy_token'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-classy_token'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-classy_token', $edit['donations_thermometer_block-' . $block_number . '-classy_token']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-classy_cid'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-classy_cid'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-classy_cid', $edit['donations_thermometer_block-' . $block_number . '-classy_cid']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-classy_eid'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-classy_eid'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-classy_eid', $edit['donations_thermometer_block-' . $block_number . '-classy_eid']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-update_frequency'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-update_frequency'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-update_frequency', $edit['donations_thermometer_block-' . $block_number . '-update_frequency']);
     }
   }
-  elseif($type == 'manual' && $parts[0] == 'donations_thermometer_block'){
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-goal'])){
+  elseif($type == 'manual' && $parts[0] == 'donations_thermometer_block') {
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-goal'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-goal', $edit['donations_thermometer_block-' . $block_number . '-goal']);
     }
-    if(isset($edit['donations_thermometer_block-' . $block_number . '-current'])){
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-current'])) {
       variable_set('donations_thermometer_block-' . $block_number . '-current', $edit['donations_thermometer_block-' . $block_number . '-current']);
     }
   }
@@ -556,7 +556,7 @@ function donations_thermometer_init() {
 /**
  * MODULE SPECIFC FUNCTIONS.
  */
-function donations_thermometer__classy_block($block_number){
+function donations_thermometer__classy_block($block_number) {
   $description = variable_get('donations_thermometer_block-' . $block_number . '-description');
   $goal = variable_get('donations_thermometer_block-' . $block_number . '-goal', 1);
   $current = variable_get('donations_thermometer_block-' . $block_number . '-current', 0);
@@ -577,13 +577,13 @@ function donations_thermometer__classy_block($block_number){
   $last_update = variable_get('donations_thermometer_block-' . $block_number . '-last_update');
   $interval = new DateInterval('PT' . $update_frequency . 'M');
 
-  if( !empty($last_update) ){
+  if( !empty($last_update) ) {
     $last_update->add($interval);
   }
 
-  if( empty($last_update) || ($now > $last_update) ){
+  if( empty($last_update) || ($now > $last_update) ) {
     $json = @file_get_contents('https://www.classy.org/api1/campaign-info?token=' . $token . '&cid=' . $cid . '&eid=' . $eid);
-    if($json){
+    if($json) {
       $data = json_decode($json);
 
       variable_set('donations_thermometer_block-' . $block_number . '-last_update', $now);
@@ -611,7 +611,7 @@ function donations_thermometer__classy_block($block_number){
 }
 
 
-function donations_thermometer__manual_block($block_number){
+function donations_thermometer__manual_block($block_number) {
   $description = variable_get('donations_thermometer_block-' . $block_number . '-description');
   $goal = variable_get('donations_thermometer_block-' . $block_number . '-goal');
   $current = variable_get('donations_thermometer_block-' . $block_number . '-current');
