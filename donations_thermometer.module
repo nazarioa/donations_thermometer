@@ -246,7 +246,7 @@ function donations_thermometer_block_configure($delta = '') {
           1440 => t('24 Hours'),
         ),
         "#empty_option" => t('Please Select'),
-        '#description' => t("How often should new data be gathered from Classy.org")
+        '#description' => t("How often should new data be gathered from Classy.org. It is highly advised that this be left at the defualt 30 minutes espeically for donation thermometers who's data does not change frequetly.")
       );
     }
 
@@ -420,6 +420,9 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
     }
     if(isset($edit['donations_thermometer_block-' . $block_number . '-classy_eid'])){
       variable_set('donations_thermometer_block-' . $block_number . '-classy_eid', $edit['donations_thermometer_block-' . $block_number . '-classy_eid']);
+    }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-update_frequency'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-update_frequency', $edit['donations_thermometer_block-' . $block_number . '-update_frequency']);
     }
   }
   elseif($type == 'manual' && $parts[0] == 'donations_thermometer_block'){
