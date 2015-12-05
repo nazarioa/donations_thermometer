@@ -45,8 +45,8 @@ function donations_thermometer_menu(){
 
 
 /**
-* Implements hook_form().
-*/
+ * Implements hook_form().
+ */
 function donations_thermometer_admin_settings_form($node, &$form_state) {
   $form = array();
 
@@ -89,7 +89,6 @@ function donations_thermometer_theme($existing, $type, $theme, $path) {
 
   $items['donations_thermometer'] = array(
     'arguments' => array('current' => NULL, 'goal' => NULL, 'prefix' => NULL, 'postfix' => NULL, 'size' => 'large'),
-    // 'file' => 'includes/theme.inc',
     'template' => 'templates/donations-thermometer',
   );
 
@@ -385,8 +384,8 @@ function donations_thermometer_block_configure($delta = '') {
 
 
 /**
-* Implements hook_block_save().
-*/
+ * Implements hook_block_save().
+ */
 function donations_thermometer_block_save($delta = '', $edit = array()) {
   $parts = explode('-', $delta);
   $block_number = $parts[1];
@@ -452,10 +451,10 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
 
 
 /**
-* Implements hook_form_FORM_ID_alter().
-*
-* Adds validation of block configuration custom fields.
-*/
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Adds validation of block configuration custom fields.
+ */
 function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_state, $form_id) {
   if ($form['module']['#value'] == 'donations_thermometer') {
     $form['#validate'][] = 'donations_thermometer_block_validate';
@@ -464,8 +463,8 @@ function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_s
 
 
 /**
-* Form validation callback of block configuration.
-*/
+ * Form validation callback of block configuration.
+ */
 function donations_thermometer_block_validate(&$form, $form_state) {
   $delta = $form['module']['#value'];
 
@@ -520,8 +519,8 @@ function donations_thermometer_block_validate(&$form, $form_state) {
 
 
 /**
-* Implementation of hook_init().
-*/
+ * Implementation of hook_init().
+ */
 function donations_thermometer_init() {
   // We add CSS and JS files here — adding it in hook_block() or
   // in the theme function is incompatible with the block cache.
@@ -533,11 +532,10 @@ function donations_thermometer_init() {
   drupal_add_css($module_path .'/css/donations_thermometer.css');
 }
 
-/* ************* */
 
 /**
-* MODULE SPECIFC FUNCTIONS.
-*/
+ * MODULE SPECIFC FUNCTIONS.
+ */
 function donations_thermometer__classy_block($block_number){
   $description = variable_get('donations_thermometer_block-' . $block_number . '-description');
   $goal = variable_get('donations_thermometer_block-' . $block_number . '-goal', 1);
