@@ -61,7 +61,7 @@ function donations_thermometer_admin_settings_form($node, &$form_state) {
   // GENERAL.
   $form['general'] = array(
     '#title' => t('General Settings'),
-    '#description' => t('General Settings. Individual meter settings can be found in the blocks for the resepctive item.'),
+    '#description' => t('General Settings. Individual meter settings can be found in the blocks for the respective item.'),
     '#type' => 'fieldset',
     '#collapsible' => FALSE,
   );
@@ -246,7 +246,7 @@ function donations_thermometer_block_configure($delta = '') {
           1440 => t('24 Hours'),
         ),
         "#empty_option" => t('Please Select'),
-        '#description' => t("How often should new data be gathered from Classy.org. It is highly advised that this be left at the defualt 30 minutes espeically for donation thermometers who's data does not change frequetly.")
+        '#description' => t("How often should new data be gathered from Classy.org. It is highly advised that this be left at the default 30 minutes especially for donation thermometers who's data does not change frequently.")
       );
     }
 
@@ -350,22 +350,22 @@ function donations_thermometer_block_configure($delta = '') {
       ),
     );
 
-    // Engagment URL
-    $form['engagment_url'] = array(
-      '#title' => t('Engagment URL'),
+    // Engagement URL
+    $form['engagement_url'] = array(
+      '#title' => t('Engagement URL'),
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
-    $form['engagment_url']['donations_thermometer_block-' . $block_number . '-url_enabled'] = array(
+    $form['engagement_url']['donations_thermometer_block-' . $block_number . '-url_enabled'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Enable Engagment URL'),
+      '#title' => t('Enable Engagement URL'),
       '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-url_enabled', 0),
       '#description' => t("If the visitor clicks on this Donation Thermometer, where should they be sent."),
     );
-    $form['engagment_url']['donations_thermometer_block-' . $block_number . '-url'] = array(
+    $form['engagement_url']['donations_thermometer_block-' . $block_number . '-url'] = array(
       '#type' => 'textfield',
-      '#title' => t('Engagment URL'),
+      '#title' => t('Engagement URL'),
       '#default_value' => variable_get('donations_thermometer_block-' . $block_number . '-url', ''),
       '#description' => t("If the visitor clicks on this Donation Thermometer, where should they be sent."),
     );
