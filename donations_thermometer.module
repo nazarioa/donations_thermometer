@@ -201,7 +201,7 @@ function donations_thermometer_block_configure($delta = '') {
         'classy' => t('Classy.org')
       ),
       "#empty_option" => t('Please Select'),
-      '#description' => t('You must save after this setting has been changed.'),
+      '#description' => t('If the type is changed, you must click save in order to see additional settings.'),
     );
     // Type specifc
     $form['thermometer_type_specifc_settings'] = array(
