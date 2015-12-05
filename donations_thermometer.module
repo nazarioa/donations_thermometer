@@ -67,7 +67,7 @@ function donations_thermometer_admin_settings_form($node, &$form_state) {
   );
   $form['general']['donations_thermometer_number_of_meters'] = array(
     '#title' => t('Number of Donation Meters'),
-    '#description' => t('You can have as many donation meters as you like. Set the number here and configure each donation meter in the settings.'),
+    '#description' => t('You can have as many donation meter blocks as you like. Set the number here and configure each donation meter\'s settings in the block settings.'),
     '#type' => 'textfield',
     '#size' => 4,
     '#default_value' => variable_get('donations_thermometer_number_of_meters', 1),
@@ -334,6 +334,7 @@ function donations_thermometer_block_configure($delta = '') {
         'small' => t('Small'),
         'large' => t('Large')
       ),
+      '#description' => t("The dimensions of these \"small\" and \"large\" are defined in the CSS for this module. If you are crafty, you can override these values in CSS to fit your needs."),
     );
     $form['thermometer_styling']['donations_thermometer_block-' . $block_number . '-color'] = array(
       '#type' => 'select',
@@ -348,6 +349,7 @@ function donations_thermometer_block_configure($delta = '') {
         'purple' => t('Purple'),
         'image' => t('Thermometer Image'),
       ),
+      '#description' => t("This too can be overridden in CSS."),
     );
 
     // Engagement URL
