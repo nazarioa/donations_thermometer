@@ -59,7 +59,7 @@ function donations_thermometer_admin_settings_form($node, &$form_state) {
   );
   $form['general']['donations_thermometer_number_of_meters'] = array(
     '#title' => t('Number of Donation Meters'),
-    '#description' => t('You can have as many donation meter blocks as you like. Set the number here and configure each donation meter\'s settings in the block settings.'),
+    '#description' => t('You can have as many donation meter blocks as you like. Set the number here and configure each donation meter\'s settings in the block settings. NOTE: lowering this number will remove any data for existing donation thermometers.'),
     '#type' => 'textfield',
     '#size' => 4,
     '#default_value' => variable_get('donations_thermometer_number_of_meters', 1),
@@ -73,10 +73,17 @@ function donations_thermometer_admin_settings_form($node, &$form_state) {
  * Implements hook_form_validate().
  */
 function donations_thermometer_admin_settings_form_validate($form, &$form_state) {
-  $number_of_meters = $form_state['values']['donations_thermometer_number_of_meters'];
+  $old_number_of_meters = variable_get('donations_thermometer_number_of_meters', 1);
+  $new_number_of_meters = $form_state['values']['donations_thermometer_number_of_meters'];
   $grep = '/^[0-9]+$/';
-  if (preg_match($grep, $number_of_meters) == FALSE && $number_of_meters > 0) {
+  if (preg_match($grep, $new_number_of_meters) == FALSE && $new_number_of_meters <= 0) {
     form_set_error('donations_thermometer_number_of_meters', t('Must be an integer bigger than zero.'));
+  }
+  elseif($old_number_of_meters > $new_number_of_meters){
+    // Remove data for old donation thermometers.
+    for ($i = $old_number_of_meters; $i > $new_number_of_meters ; $i--) {
+      donations_thermometer__remove_block_data($i);
+    }
   }
 }
 
@@ -501,15 +508,28 @@ function donations_thermometer_block_validate(&$form, $form_state) {
       }
     }
     elseif ($new_type == $old_type && $new_type == 'classy') {
+      // TODO: For now there is no valdiation. At some point, maybe wise to have
+      // classy.org API version numbers. Then validate that the users input
+      // fits with that version's number requirmenets.
       //
+      // Another idea would be to check that data is coming in available given
+      // the credentials supplied.
     }
     elseif ($new_type != $old_type) {
+      // TODO: Possible feature.
+      // Remove any stored data from old type.
+      // Right now the old type data stays put. If the current block is removed
+      // or if the donation thermometer changes we have to progaramtcially
+      // remove data for each type.
       //
+      // Sudo code:
+      // 1) Find old type.
+      // 2) Call the donations_thermometer__remove_TYPE_block_data function
     }
 
     // Validation for all types.
-    $url_enabled = $form_state['values'][$thermometer_id . '-url_enabled'];
-    $url = $form_state['values'][$thermometer_id . '-url'];
+    @$url_enabled = $form_state['values'][$thermometer_id . '-url_enabled'];
+    @$url = $form_state['values'][$thermometer_id . '-url'];
 
     if ($url_enabled == 1 && empty($url) ) {
       form_set_error($thermometer_id . '-url', t('A URL should be set if URL is enabled.'));
