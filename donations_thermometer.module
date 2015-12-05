@@ -454,32 +454,45 @@ function donations_thermometer_form_block_admin_configure_alter(&$form, &$form_s
 */
 function donations_thermometer_block_validate(&$form, $form_state) {
   //TODO: I need to add vlaidation
-  $delta = $form['delta']['#value'];
-  if ($delta == 'thermometer') {
-    $current = $form_state['values']['donations_thermometer_current'];
-    $total = $form_state['values']['donations_thermometer_target'];
-    $description = $form_state['values']['donations_thermometer_description'];
+  $delta = $form['module']['#value'];
 
-    if (!is_numeric($current)) {
-      form_set_error('donations_thermometer_current', t('You must select a number for the current number.'));
-    }
-    else if ($current < 0) {
-      form_set_error('donations_thermometer_current', t('Current number must be positive.'));
-    }
+  if ($delta == 'donations_thermometer') {
+    $thermometer_id = $form['delta']['#value'];
 
-    if (!is_numeric($total)) {
-      form_set_error('donations_thermometer_total', t('You must select a number for the target number.'));
-    }
-    else if ($total <= 0) {
-      form_set_error('donations_thermometer_total', t('Target number must be positive.'));
-    }
+    $new_type = $form_state['values'][$thermometer_id . '-type'];
+    $old_type = variable_get($thermometer_id . '-type');
 
-    if ($current > $total) {
-      form_set_error('donations_thermometer_current', t('Current number must be equal to or less than the target.'));
+    if ($new_type == '') {
+      form_set_error($thermometer_id . '-type', t('Please select an valid type.'));
     }
+    elseif ($new_type == $old_type && $new_type == 'manual') {
+      $current = $form_state['values'][$thermometer_id . '-current'];
+      $goal = $form_state['values'][$thermometer_id . '-goal'];
 
-    if ( empty($description) ) {
-      form_set_error('donations_thermometer_description', t('A description must be provided.'));
+      if (!is_numeric($current)) {
+        form_set_error($thermometer_id . '-current', t('You must select a number for the current number.'));
+      }
+      else if ($current < 0) {
+        form_set_error($thermometer_id . '-current', t('Current number must be positive.'));
+      }
+
+      if (!is_numeric($goal)) {
+        form_set_error($thermometer_id . '-goal', t('You must select a number for the goal.'));
+      }
+      else if ($goal <= 0) {
+        form_set_error($thermometer_id . '-goal', t('Goal number must be greater than zero.'));
+      }
+
+      if ($current > $goal) {
+        form_set_error($thermometer_id . '-current', t('Current number must be equal to or less than the goal.'));
+        form_set_error($thermometer_id . '-goal', t('Current number must be equal to or less than the goal.'));
+      }
+    }
+    elseif ($new_type == $old_type && $new_type == 'classy') {
+      //
+    }
+    elseif ($new_type != $old_type) {
+      //
     }
   }
 }
