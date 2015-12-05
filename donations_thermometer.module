@@ -606,3 +606,45 @@ function donations_thermometer__manual_block($block_number){
 
   return compact('block_number', 'description', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent', 'url', 'url_enabled');
 }
+
+
+/**
+ * Remove Block Data.
+ *
+ * These functions remove the generic donations_thermometer data for a given
+ * block number.
+ */
+function donations_thermometer__remove_block_data($block_number) {
+  donations_thermometer__remove_generic_block_data($block_number);
+  donations_thermometer__remove_classy_block_data($block_number);
+  donations_thermometer__remove_manual_block_data($block_number);
+}
+
+function donations_thermometer__remove_generic_block_data($block_number) {
+  variable_del('donations_thermometer_block-' . $block_number . '-description');
+  variable_del('donations_thermometer_block-' . $block_number . '-postfix');
+  variable_del('donations_thermometer_block-' . $block_number . '-prefix');
+  variable_del('donations_thermometer_block-' . $block_number . '-size');
+  variable_del('donations_thermometer_block-' . $block_number . '-color');
+  variable_del('donations_thermometer_block-' . $block_number . '-orientation');
+  variable_del('donations_thermometer_block-' . $block_number . '-url_enabled');
+  variable_del('donations_thermometer_block-' . $block_number . '-url');
+  variable_del('donations_thermometer_block-' . $block_number . '-url_enabled');
+}
+
+function donations_thermometer__remove_classy_block_data($block_number) {
+  variable_del('donations_thermometer_block-' . $block_number . '-goal');
+  variable_del('donations_thermometer_block-' . $block_number . '-current');
+  variable_del('donations_thermometer_block-' . $block_number . '-classy_token');
+  variable_del('donations_thermometer_block-' . $block_number . '-classy_cid');
+  variable_del('donations_thermometer_block-' . $block_number . '-classy_eid');
+  variable_del('donations_thermometer_block-' . $block_number . '-num_donors');
+  variable_del('donations_thermometer_block-' . $block_number . '-num_donations');
+  variable_del('donations_thermometer_block-' . $block_number . '-update_frequency');
+  variable_del('donations_thermometer_block-' . $block_number . '-last_update');
+}
+
+function donations_thermometer__remove_manual_block_data($block_number) {
+  variable_del('donations_thermometer_block-' . $block_number . '-goal');
+  variable_del('donations_thermometer_block-' . $block_number . '-current');
+}
