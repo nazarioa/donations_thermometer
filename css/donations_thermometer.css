@@ -11,6 +11,10 @@
     from {height: 0%;}
 }
 
+div.donations_thermometer_wrapper a:hover {
+  text-decoration: none;
+}
+
 div.gauge{
   position: relative;
   background-color: #cccccc;

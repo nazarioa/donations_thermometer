@@ -408,6 +408,12 @@ function donations_thermometer_block_save($delta = '', $edit = array()) {
     if(isset($edit['donations_thermometer_block-' . $block_number . '-prefix'])){
       variable_set('donations_thermometer_block-' . $block_number . '-prefix', $edit['donations_thermometer_block-' . $block_number . '-prefix']);
     }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-url'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-url', $edit['donations_thermometer_block-' . $block_number . '-url']);
+    }
+    if(isset($edit['donations_thermometer_block-' . $block_number . '-url_enabled'])){
+      variable_set('donations_thermometer_block-' . $block_number . '-url_enabled', $edit['donations_thermometer_block-' . $block_number . '-url_enabled']);
+    }
   }
 
   if($type == 'classy' && $parts[0] == 'donations_thermometer_block'){
@@ -494,6 +500,14 @@ function donations_thermometer_block_validate(&$form, $form_state) {
     elseif ($new_type != $old_type) {
       //
     }
+
+    // Validation for all types.
+    $url_enabled = $form_state['values'][$thermometer_id . '-url_enabled'];
+    $url = $form_state['values'][$thermometer_id . '-url'];
+
+    if ($url_enabled == 1 && empty($url) ) {
+      form_set_error($thermometer_id . '-url', t('A URL should be set if URL is enabled.'));
+    }
   }
 }
 
@@ -566,8 +580,10 @@ function donations_thermometer__classy_block($block_number){
   }
 
   $percent = round(($current / $goal) * 100, variable_get('donations_thermometer_block-' . $block_number . '-roundto', 1));
+  $url_enabled = variable_get('donations_thermometer_block-' . $block_number . '-url_enabled');
+  $url = variable_get('donations_thermometer_block-' . $block_number . '-url');
 
-  return compact('block_id', 'description', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent', 'num_donations', 'num_donors');
+  return compact('block_id', 'description', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent', 'num_donations', 'num_donors', 'url', 'url_enabled');
 }
 
 
@@ -581,7 +597,9 @@ function donations_thermometer__manual_block($block_number){
   $size = variable_get('donations_thermometer_block-' . $block_number . '-size');
   $color = variable_get('donations_thermometer_block-' . $block_number . '-color');
   $orientation = variable_get('donations_thermometer_block-' . $block_number . '-orientation');
+  $url_enabled = variable_get('donations_thermometer_block-' . $block_number . '-url_enabled');
+  $url = variable_get('donations_thermometer_block-' . $block_number . '-url');
   $percent = round(($current / $goal) * 100, variable_get('donations_thermometer_block-' . $block_number . '-roundto', 1));
 
-  return compact('block_id', 'description', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent');
+  return compact('block_id', 'description', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent', 'url', 'url_enabled');
 }

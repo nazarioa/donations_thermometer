@@ -14,6 +14,7 @@
  * - $current (double): Current thermometer value.
  * - $prefix (string): Prefix to 'Current' and 'Goal'.
  * - $postfix (string): Prefix to 'Current' and 'Goal'.
+ * - $url_enabled (bool): Should a url be
  *
  * @see template_preprocess_forum_list()
  *
@@ -21,7 +22,11 @@
  */
  ?>
 
-<div id="donations_thermometer-<?php print $block_id ?>">
+
+<div id="donations_thermometer-<?php print $block_id ?>" class="donations_thermometer_wrapper">
+  <?php if($url_enabled == TRUE):?>
+  <a href="<?php print $url ?>">
+  <?php endif?>
   <div class="gauge <?php print $size ?> <?php print $orientation ?> <?php print $color ?>">
     <span class="current-value"><?php print $percent; ?>%</span>
     <span class="current-meter" style="<?php print $inlinecss ?>"></span>
@@ -34,4 +39,7 @@
     <label><?php print t('Goal:'); ?></label>
     <span><?php print $prefix; ?><?php print $goal; ?><?php print $postfix; ?></span>
   </p>
+  <?php if($url_enabled == TRUE):?>
+  </a>
+  <?php endif?>
 </div>
