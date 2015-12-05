@@ -535,7 +535,6 @@ function donations_thermometer_init() {
 * MODULE SPECIFC FUNCTIONS.
 */
 function donations_thermometer__classy_block($block_number){
-  $block_id = $block_number;
   $description = variable_get('donations_thermometer_block-' . $block_number . '-description');
   $goal = variable_get('donations_thermometer_block-' . $block_number . '-goal', 1);
   $current = variable_get('donations_thermometer_block-' . $block_number . '-current', 0);
@@ -586,12 +585,11 @@ function donations_thermometer__classy_block($block_number){
   $url_enabled = variable_get('donations_thermometer_block-' . $block_number . '-url_enabled');
   $url = variable_get('donations_thermometer_block-' . $block_number . '-url');
 
-  return compact('block_id', 'description', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent', 'num_donations', 'num_donors', 'url', 'url_enabled');
+  return compact('block_number', 'description', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent', 'num_donations', 'num_donors', 'url', 'url_enabled');
 }
 
 
 function donations_thermometer__manual_block($block_number){
-  $block_id = $block_number;
   $description = variable_get('donations_thermometer_block-' . $block_number . '-description');
   $goal = variable_get('donations_thermometer_block-' . $block_number . '-goal');
   $current = variable_get('donations_thermometer_block-' . $block_number . '-current');
@@ -604,5 +602,5 @@ function donations_thermometer__manual_block($block_number){
   $url = variable_get('donations_thermometer_block-' . $block_number . '-url');
   $percent = round(($current / $goal) * 100, variable_get('donations_thermometer_block-' . $block_number . '-roundto', 1));
 
-  return compact('block_id', 'description', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent', 'url', 'url_enabled');
+  return compact('block_number', 'description', 'goal', 'current', 'prefix', 'postfix', 'size', 'color', 'orientation', 'percent', 'url', 'url_enabled');
 }

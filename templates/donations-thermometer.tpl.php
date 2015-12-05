@@ -24,7 +24,7 @@
  ?>
 
 
-<div id="donations_thermometer-<?php print $block_id ?>" class="donations_thermometer_wrapper">
+<div id="donations_thermometer-<?php print $block_number; ?>" class="donations_thermometer_wrapper">
   <?php if($url_enabled == TRUE):?>
   <a href="<?php print $url ?>">
   <?php endif?>
