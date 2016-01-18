@@ -2,6 +2,7 @@ CONTENTS OF THIS FILE
 ---------------------
  * Introduction
  * Features
+ * Backwards Compatibility
  * Requirements
  * Installation
  * Configuration
@@ -13,14 +14,10 @@ CONTENTS OF THIS FILE
 
 INTRODUCTION
 ------------
+This documentation is for 7.x-2.x.
 
 This module generates a "donation thermometer" which shows progress of an
 organizations donation.
-
-This is a fork of [sejtraav](https://www.drupal.org/u/sejtraav)'s
-[donations_thermometer](https://www.drupal.org/project/donations_thermometer).
-
-The current incarnation does not yet have an official home on Drupal.org.
 
 
 
@@ -29,10 +26,15 @@ FEATURES
 
  * Classy.org or Manual data feed.
  * Multiple meters.
- * CSS3 version of meter.
  * Horizontal / Vertical orientation of the meters.
  * Preset meter colors.
+ * Styling customizable via CSS3.
 
+
+BACKWARDS COMPATIBILITY
+-----------------------
+* Panels not yet tested with D7.x-2.x
+* Styling vastly different between D7.x-2.x and D7.x-1.x
 
 
 REQUIREMENTS
@@ -76,5 +78,20 @@ CONFIGURATION
 TROUBLESHOOTING
 ---------------
 
-There are no none issues. If you find one please
-contact [Nazario A. Ayala](mailto:nazario@niztech.com)
+There are no none issues. If you find one please submit a request via the
+project page:
+[https://www.drupal.org/project/donations_thermometer](https://www.drupal.org/project/donations_thermometer)
+
+
+FAQ
+---
+
+None so far so ask. Look at the TROUBLESHOOTING section.
+
+
+Maintainers
+-----------
+Listed alphabetically by username.
+* [lsolesen](https://www.drupal.org/u/lsolesen)
+* [nazarioa](https://www.drupal.org/u/nazarioa)
+* [sejtraav](https://www.drupal.org/u/sejtraav) -- Original Developer
