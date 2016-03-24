@@ -3,6 +3,8 @@
  * @file
  */
 
+module_load_include('module', 'donations_thermometer');
+
 /**
  * Implements hook_update().
  */
