@@ -115,10 +115,7 @@ function donations_thermometer_block_info() {
   $block_number = 1;
 
   while ($block_number <= $number_of_blocks) {
-    $block_description = '';
-    if( !empty(variable_get('donations_thermometer_block-' . $block_number . '-description')) ) {
-      $block_description = variable_get('donations_thermometer_block-' . $block_number . '-description');
-    }
+    $block_description = variable_get('donations_thermometer_block-' . $block_number . '-description');
 
     $blocks['donations_thermometer_block-' . $block_number] = array(
       'info' => t('Donations Thermometer: ' . $block_number . ' ' . $block_description),
