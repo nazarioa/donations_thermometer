@@ -1,0 +1,10 @@
+name: Donations Thermometer
+type: module
+description: Allows creation of a thermometer block to visually show amount of donations etc
+core: 8.x
+version: VERSION
+package: Custom
+
+configure: donations_thermometer.admin
+
+# dependences:
